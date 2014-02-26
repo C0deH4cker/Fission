@@ -18,7 +18,7 @@ namespace fsn {
 		Point pos;
 		Direction dir;
 		int energy;
-		unsigned mass;
+		int mass;
 		bool printing;
 		
 		Atom(const Point& startingPos, Direction startingDir);

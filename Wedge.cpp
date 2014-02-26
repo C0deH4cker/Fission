@@ -7,18 +7,35 @@
 //
 
 #include "Wedge.h"
+#include "Atom.h"
 #include "Component.h"
 #include "Direction.h"
+#include "Errors.h"
 
 using namespace fsn;
 
 
 Wedge::Wedge(char type)
-: Component(type), value(2) {}
+: Component(type), DirectedComponent(type), value(2) {}
+
+Direction Wedge::getDir() const {
+	switch(type) {
+		case '^': return UP;
+		case '<': return LEFT;
+		case 'V': return DOWN;
+		case '>': return RIGHT;
+		
+		default:
+			fatal("Cell '%c' is not a Wedge.", type);
+	}
+}
 
 bool Wedge::onHit(Atom& atom) {
-	// TODO: implement
+	Direction dir(getDir());
+	bool destroy = (atom.dir == dir);
 	
-	return false;
+	
+	
+	return destroy;
 }
 

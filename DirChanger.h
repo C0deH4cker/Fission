@@ -12,19 +12,17 @@
 #include "Component.h"
 #include "Direction.h"
 #include "Point.h"
+#include "DirectedComponent.h"
 
 namespace fsn {
 	class Atom;
 	
-	class DirChanger: public virtual Component {
+	class DirChanger: public virtual DirectedComponent {
 	public:
 		DirChanger(char type);
 		
-		Direction getDir() const;
+		virtual Direction getDir() const;
 		virtual bool onHit(Atom& atom);
-		
-	private:
-		Direction dir;
 	};
 }
 

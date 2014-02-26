@@ -10,8 +10,8 @@ through various means such as bouncing off of mirrors.
 ##Atom lifetime##
 
 Atoms will continue moving around until a component destroys it. All atoms move once per tick, simultaneously. Multiple atoms can share the same
-position. When they hit the edge of the grid, they are wrapped around to the other side. If an atom's mass ever reaches 0, it is destroyed. When
-there are no more atoms left on the grid, the program exits with status 0 (except when the `*` component is hit).
+position. When they hit the edge of the grid, they are wrapped around to the other side. If an atom's mass ever goes negative, it is destroyed.
+When there are no more atoms left on the grid, the program exits with status 0 (except when the `*` component is hit).
 
 
 ##Components##
@@ -19,18 +19,19 @@ there are no more atoms left on the grid, the program exits with status 0 (excep
 /, \:		Purely mirrors to turn control flow.
 
 ^, V, <, >:	From the sides, these are mirrors to turn control flow.
-			From the vertex, these are splitters. The atom splits in two: its mass is divided by this component's mass, which defaults to a
-			value of 2, and its energy remains the same. In cases where there would be a remainder, it is added to the atom from the right
-			half of the split. From the split, these are sinks. The atom's mass overwrites this component's mass, and the atom is destroyed.
+			From the vertex, these are splitters. The atom splits in two: its mass is divided by this component's value, which defaults to a
+			value of 2, and its energy remains the same. In cases where there would be a remainder, it is added to the atom on the right
+			half of the split.
+            From the split, these are sinks. The atom's mass overwrites this component's value, and the atom is destroyed.
 
 U, D, L, R:	Spawns an atom at this position when the program starts. Direction is up, down, left, or right, respectively.
 			When another atom hits this component, its direction is changed to the component's direction.
 
-A, Y, {, }:	Joiners when hit from the sides. When an atom hits the side, it waits until a second atom hits the side. At this point,
+A, Y, {, }:	Joiners when hit from the sides. When an atom hits a side, it waits until a second atom hits a side. At this point,
 			the two atoms are joined by adding their masses and energy levels. This atom is released from the vertex.
-			Cloner when hit from the vertex (mass is multiplied by this component's mass, default of 1). The two cloned atoms go 90
+			Cloner when hit from the vertex (mass is multiplied by this component's value, default of 1). The two cloned atoms go 90
 			degrees to the left and right of the component's vertex.
-			Sets this component's mass when hit from the back, and that atom is destroyed.
+			Sets this component's value when hit from the back using the atom's mass, and that atom is then destroyed.
 
 ?:			When an atom goes here, its mass is replaced by the ASCII value of the input character. All other atoms freeze until input is read.
 			If multiple atoms hit input components at the same time, they are ordered by row, then by column from the top-left. On EOF, the next
@@ -76,7 +77,7 @@ M, W, [, ]: The atom's direction is set to down, up, left, or right, respectivel
 
 |, -:		Atoms are reflected horizontally or vertically, respectively. From the edge, does nothing.
 
-[a-z ]:		The atom's mass is set to the ASCII value of this character.
+[a-z]:		The atom's mass is set to the ASCII value of this character.
 
 [0-9]:		These are teleporters. When the atom hits a teleporter it will be transported to the next teleporter in order. Atoms will retain
 			their mass, energy, and direction upon teleportation. If there is only one teleporter, it will have no effect.
@@ -126,19 +127,20 @@ As is this one:
 Slightly more complex hello world:
 
     .........../------V...!..
-    ...........|......|...o..
+    ...........|......|...r..
     ...........|......|...!..
-    ...........|......+...r..
-    !dO........|../---^---\!l
+    ...........|......+...l..
+    O..........|../---^---\!d
     ......R----/..|comment|..
     ..............| block |..
     !l!e!h\.......\---Y---/!o
-    ......|...........|... ..
-    ......|...........|...!..
     ......|...........|...w..
-    ---_--/...........\_--+--
+    ......|...........|...!..
+    ......|...........|...o..
+    ------/...........\---.--
 
 Reverses stdin and then terminates:
+TODO: update
 
     /++//.\
     A$ZKR+<

@@ -39,7 +39,7 @@ bool IOComponent::onHit(Atom& atom) {
 			}
 			
 			if(std::cin.get(c)) {
-				atom.mass = (int)c;
+				atom.mass = (int)(unsigned char)c;
 			}
 			else {
 				++atom.energy;

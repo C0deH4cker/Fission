@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) {
 	}
 	*/
 	
-	src.open("teleporters.fsn");
+	src.open("cat.fsn");
 	if(!src.is_open()) {
 		std::cerr << "Unable to open source file." << std::endl;
 		exit(EXIT_FAILURE);

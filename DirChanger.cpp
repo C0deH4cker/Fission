@@ -7,6 +7,7 @@
 //
 
 #include "DirChanger.h"
+#include "DirectedComponent.h"
 #include "Component.h"
 #include "Errors.h"
 #include "Atom.h"
@@ -16,7 +17,7 @@ using namespace fsn;
 
 
 DirChanger::DirChanger(char type)
-: Component(type) {}
+: Component(type), DirectedComponent(type) {}
 
 Direction DirChanger::getDir() const {
 	switch(type) {

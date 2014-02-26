@@ -143,7 +143,7 @@ void Grid::tick(Fission& mgr) {
 			std::cout.put(comp->getType());
 			++cur.mass;
 		}
-		else if(comp->onHit(cur) || cur.mass == 0) {
+		else if(comp->onHit(cur) || cur.mass < 0) {
 			// Process the hit, and don't add the atom again if it's destroyed
 			continue;
 		}

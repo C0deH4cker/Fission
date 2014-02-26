@@ -10,15 +10,17 @@
 #define _FSN_WEDGE_H_
 
 #include "Component.h"
+#include "DirectedComponent.h"
 
 namespace fsn {
 	class Atom;
 	
-	class Wedge: public virtual Component {
+	class Wedge: public virtual DirectedComponent {
 	public:
 		Wedge(char type);
 		
 		virtual bool onHit(Atom& atom);
+		virtual Direction getDir() const;
 		
 	private:
 		int value;
