@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) {
 	}
 	*/
 	
-	src.open("cat.fsn");
+	src.open("wedges.fsn");
 	if(!src.is_open()) {
 		std::cerr << "Unable to open source file." << std::endl;
 		exit(EXIT_FAILURE);

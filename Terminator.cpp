@@ -19,7 +19,7 @@ Terminator::Terminator(char type, Grid& grid)
 
 bool Terminator::onHit(Atom& atom) {
 	// I'll be back
-	grid.terminate(atom.energy);
+	grid.terminate(atom.mass);
 	return true;
 }
 

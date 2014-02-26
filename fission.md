@@ -20,8 +20,8 @@ When there are no more atoms left on the grid, the program exits with status 0 (
 
 ^, V, <, >:	From the sides, these are mirrors to turn control flow.
 			From the vertex, these are splitters. The atom splits in two: its mass is divided by this component's value, which defaults to a
-			value of 2, and its energy remains the same. In cases where there would be a remainder, it is added to the atom on the right
-			half of the split.
+			value of 2, and its energy remains the same. The left half of the split atom is set to (mass / value), and the right half is set
+            to (mass - left).
             From the split, these are sinks. The atom's mass overwrites this component's value, and the atom is destroyed.
 
 U, D, L, R:	Spawns an atom at this position when the program starts. Direction is up, down, left, or right, respectively.
@@ -66,8 +66,8 @@ X:			Cloning mirror that duplicates the atom. One copy keeps moving forward, and
 
 ;:			Destroys atoms when they hit this component. Serves as an endpoint.
 
-*:			Causes the program to terminate and all atoms are destroyed after this tick. The energy value of the atom that caused termination
-			is used as the exit code. If multiple atoms hit the same exit cell, the highest energy value will be used as the exit code.
+*:			Causes the program to terminate and all atoms are destroyed after this tick. The mass of the atom that caused termination is used as
+            the exit code. If multiple atoms hit the same exit cell, the highest mass will be used as the exit code.
 
 #:			Makes the atom move in a random direction (forward, left, or right). Atoms will not be reflected.
 
@@ -88,6 +88,8 @@ M, W, [, ]: The atom's direction is set to down, up, left, or right, respectivel
 
 ':			Toggles printing mode. When an atom is in printing mode, it will print every character it encounters until the next `'`.
 			Once printing is done, the atom's mass is set to the number of characters printed.
+
+`:          The atom's mass will be set to the ASCII value of the next character it hits, and that component will not be evaluated.
 
 
 All other characters are ignored completely, and atoms will pass through them without changing.

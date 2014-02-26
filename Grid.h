@@ -27,7 +27,7 @@ namespace fsn {
 	
 	class Grid {
 	public:
-		size_t width, height;
+		int width, height;
 		
 		Grid(std::istream& src);
 		~Grid();

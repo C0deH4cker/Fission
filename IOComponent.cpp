@@ -22,6 +22,7 @@ IOComponent::IOComponent(char type, Grid& grid)
 
 bool IOComponent::onHit(Atom& atom) {
 	char c;
+	bool destroy = false;
 	
 	switch(type) {
 		case '!':
@@ -30,7 +31,7 @@ bool IOComponent::onHit(Atom& atom) {
 			
 		case 'O':
 			std::cout.put((char)atom.mass);
-			grid.terminate(0);
+			destroy = true;
 			break;
 		
 		case '?':
@@ -50,13 +51,10 @@ bool IOComponent::onHit(Atom& atom) {
 		case '\'':
 			if(atom.printing) {
 				atom.printing = false;
-				// Decrement mass because it started at 1 instead of 0
-				--atom.mass;
 			}
 			else {
 				atom.printing = true;
-				// Don't set to 0, because that would kill it
-				atom.mass = 1;
+				atom.mass = 0;
 			}
 			break;
 		
@@ -65,6 +63,6 @@ bool IOComponent::onHit(Atom& atom) {
 			fatal("Cell '%c' is not an IOComponent.", type);
 	}
 	
-	return false;
+	return destroy;
 }
 

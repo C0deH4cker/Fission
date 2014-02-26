@@ -32,13 +32,13 @@ Grid::Grid(std::istream& src)
 	// Read in every line, keeping track of the longest one
 	while(getline(src, line)) {
 		if(line.size() > width) {
-			width = line.size();
+			width = (int)line.size();
 		}
 		
 		prog.push_back(line);
 	}
 	
-	height = prog.size();
+	height = (int)prog.size();
 	cells.reserve(height);
 	
 	// Convert the character grid to components
@@ -76,13 +76,32 @@ Grid::~Grid() {
 	}
 }
 
+//#define DEBUGGING
 void Grid::tick(Fission& mgr) {
 	std::priority_queue<Atom, std::vector<Atom>, std::greater<Atom> > next;
+	
+#ifdef DEBUGGING
+	int i = 0;
+	std::cerr.put('\n');
+#endif
 	
 	// Move all atoms and store them in a new atom map
 	while(!atoms.empty()) {
 		Atom cur(atoms.top());
 		atoms.pop();
+		
+#ifdef DEBUGGING
+		while(Point{i % width, i / width} < cur.pos) {
+			std::cerr.put(cells[i / width][i % width]->getType());
+			++i;
+			
+			if(i % width == 0) {
+				std::cerr.put('\n');
+			}
+		}
+		std::cerr << "";
+		++i;
+#endif
 		
 		// See if this atom was teleported last tick
 		std::map<Atom, int>::iterator t(teleported.find(cur));
@@ -113,8 +132,20 @@ void Grid::tick(Fission& mgr) {
 		}
 		
 		// Move the atom
-		next.push(cur.move((int)width, (int)height));
+		next.push(cur.move(width, height));
 	}
+	
+#ifdef DEBUGGING
+	while(i < width * height) {
+		if(i % width == 0) {
+			std::cerr.put('\n');
+		}
+		
+		std::cerr.put(cells[i / width][i % width]->getType());
+		++i;
+	}
+	std::cerr.put('\n');
+#endif
 	
 	// Tick all dynamic components
 	std::unordered_set<DynamicComponent*>::iterator dyn = dynamics.begin();

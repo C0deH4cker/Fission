@@ -11,18 +11,20 @@
 
 #include "Component.h"
 #include "DirectedComponent.h"
+#include "Grid.h"
 
 namespace fsn {
 	class Atom;
 	
 	class Wedge: public virtual DirectedComponent {
 	public:
-		Wedge(char type);
+		Wedge(char type, Grid& grid);
 		
 		virtual bool onHit(Atom& atom);
 		virtual Direction getDir() const;
 		
 	private:
+		Grid& grid;
 		int value;
 	};
 }

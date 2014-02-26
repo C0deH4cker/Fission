@@ -69,7 +69,7 @@ Component* Component::create(char type, Grid& grid, Point pt) {
 		case '>':
 		case 'V':
 		case '^':
-			return new Wedge(type);
+			return new Wedge(type, grid);
 		
 		case '!':
 		case 'O':
