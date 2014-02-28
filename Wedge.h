@@ -25,7 +25,8 @@ namespace fsn {
 		
 	private:
 		Grid& grid;
-		int value;
+		int divisor;
+		int minusEnergy;
 	};
 }
 

@@ -96,7 +96,7 @@ bool Mirror::onHit(Atom& atom) {
 			break;
 		
 		default:
-			fatal("Cell '%c' is not a mirror.", type);
+			fatal("Cell '%c' is not a Mirror.", type);
 	}
 	
 	return destroy;

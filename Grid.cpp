@@ -48,7 +48,7 @@ Grid::Grid(std::istream& src)
 		
 		for(int j = 0; j < width; j++) {
 			Component* comp;
-			if(j > prog[i].size()) {
+			if(j >= prog[i].size()) {
 				// Default to ' ' if after EOL
 				comp = new Component(' ');
 			}
@@ -93,14 +93,15 @@ void Grid::tick(Fission& mgr) {
 #ifdef DEBUGGING
 		while(Point{i % width, i / width} < cur.pos) {
 			std::cerr.put(cells[i / width][i % width]->getType());
-			++i;
 			
-			if(i % width == 0) {
+			if(++i % width == 0) {
 				std::cerr.put('\n');
 			}
 		}
 		std::cerr << "";
-		++i;
+		if(++i % width == 0) {
+			std::cerr.put('\n');
+		}
 #endif
 		
 		// See if this atom was teleported last tick

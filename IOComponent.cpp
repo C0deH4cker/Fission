@@ -41,9 +41,10 @@ bool IOComponent::onHit(Atom& atom) {
 			
 			if(std::cin.get(c)) {
 				atom.mass = (int)(unsigned char)c;
+				atom.energy = 0;
 			}
 			else {
-				++atom.energy;
+				atom.energy = 1;
 				pastEOF = true;
 			}
 			break;

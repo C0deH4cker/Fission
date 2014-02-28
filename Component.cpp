@@ -19,6 +19,7 @@
 #include "Terminator.h"
 #include "DirChanger.h"
 #include "PartialMirror.h"
+#include "Cloner.h"
 
 using namespace fsn;
 
@@ -60,12 +61,13 @@ Component* Component::create(char type, Grid& grid, Point pt) {
 		/* TODO: Implement these cases
 		case 'K':
 		case 'E':
+		*/
 		
 		case '{':
 		case '}':
 		case 'Y':
 		case 'A':
-		*/
+			return new Cloner(type, grid);
 		
 		case '<':
 		case '>':

@@ -16,78 +16,79 @@ When there are no more atoms left on the grid, the program exits with status 0 (
 
 ##Components##
 
-/, \:		Purely mirrors to turn control flow.
+/, \:       Purely mirrors to turn control flow.
 
-^, V, <, >:	From the sides, these are mirrors to turn control flow.
-			From the vertex, these are splitters. The atom splits in two: its mass is divided by this component's value, which defaults to a
-			value of 2, and its energy remains the same. The left half of the split atom is set to (mass / value), and the right half is set
-            to (mass - left).
-            From the split, these are sinks. The atom's mass overwrites this component's value, and the atom is destroyed.
+^, V, <, >: From the sides, these are mirrors to turn control flow.
+            From the vertex, these are splitters. The atom splits in two: its mass is divided by this component's stored mass (default 2),
+            and the energy of both atoms is decreased by this component's stored energy (default 0). The left half of the split atom is
+            set to (mass / value), and the right half is set to (mass - left).
+            When an atom hits the back (in the split), it is stored in the component (mass and energy).
 
-U, D, L, R:	Spawns an atom at this position when the program starts. Direction is up, down, left, or right, respectively.
-			When another atom hits this component, its direction is changed to the component's direction.
+U, D, L, R: Spawns an atom at this position when the program starts. Direction is up, down, left, or right, respectively.
+            When another atom hits this component, its direction is changed to the component's direction.
 
-A, Y, {, }:	Joiners when hit from the sides. When an atom hits a side, it waits until a second atom hits a side. At this point,
-			the two atoms are joined by adding their masses and energy levels. This atom is released from the vertex.
-			Cloner when hit from the vertex (mass is multiplied by this component's value, default of 1). The two cloned atoms go 90
-			degrees to the left and right of the component's vertex.
-			Sets this component's value when hit from the back using the atom's mass, and that atom is then destroyed.
+A, Y, {, }: Joiners when hit from the sides. When an atom hits a side, it waits until an atom hits the other side. At this point,
+            the two atoms are joined by adding their masses and energy levels. This atom is released from the vertex.
+            Cloner when hit from the vertex (mass is multiplied by this component's value, default of 1). The two cloned atoms go 90
+            degrees to the left and right of the component's vertex.
+            Sets this component's value when hit from the back using the atom's mass, and that atom is then destroyed.
 
-?:			When an atom goes here, its mass is replaced by the ASCII value of the input character. All other atoms freeze until input is read.
-			If multiple atoms hit input components at the same time, they are ordered by row, then by column from the top-left. On EOF, the next
-			atom to hit this component has its energy incremented and its mass unchanged. All subsequent atoms if any are destroyed.
+?:          When an atom goes here, its mass is replaced by the ASCII value of the input character and its energy is set to 1 if stdin is at
+            EOF and 0 otherwise. All other atoms freeze until input is read.
+            If multiple atoms hit input components at the same time, they are ordered by row, then by column from the top-left.
+            After EOF, all subsequent atoms if any are destroyed.
 
-!:			When hit by an atom, the ASCII character represented by its mass is output. Same order as `?` for simultaneous occurrences.
+!:          When hit by an atom, the ASCII character represented by its mass is output. Same order as `?` for simultaneous occurrences.
 
-O:			Same as `!`, but the atom is destroyed.
+O:          Same as `!`, but the atom is destroyed.
 
-$, ~:		Increments or decrements the atom's energy, respectively.
+$, ~:       Increments or decrements the atom's energy, respectively.
 
-+, _:		Increments or decrements the atom's mass, respectively.
++, _:       Increments or decrements the atom's mass, respectively.
 
-%, &:		Allows for conditional control flow. If the atom's energy level is at least 1, it is decremented and the atom bounces as if this
-			component as if it were a `\` or `/` mirror, respectively. Otherwise, the atom bounces as if it were the opposite mirror.
+%, &:       Allows for conditional control flow. If the atom's energy level is at least 1, it is decremented and the atom bounces as if this
+            component as if it were a `\` or `/` mirror, respectively. Otherwise, the atom bounces as if it were the opposite mirror.
 
-@:			Swaps the atom's mass and energy.
+@:          Swaps the atom's mass and energy.
 
-K:			Acts as a stack: atoms that hit this from above, below, or the right are pushed to the stack. When it's hit from the left by
-			an atom, every atom stored in the stack is popped, one at a time, and the atom that triggered this is destroyed. All atoms
-			exit the stack from the left.
+K:          Acts as a stack: atoms that hit this from above, below, or the right are pushed to the stack. When it's hit from the left by
+            an atom, every atom stored in the stack is popped, one at a time, and the atom that triggered this is destroyed. All atoms
+            exit the stack from the left.
 
-E:			Same as a stack, except this is a queue (FIFO rather than LIFO).
+E:          Same as a stack, except this is a queue (FIFO rather than LIFO).
 
-Z, S:		Act as rotational mirrors. Atoms will turn 90 degrees to the left or right, respectively, when the hit this component. Any atom with
-			at least 1 energy will pass straight through this, and its energy will be decremented.
+Z, S:       Act as rotational mirrors. Atoms will turn 90 degrees to the left or right, respectively, when the hit this component. Any atom with
+            at least 1 energy will pass straight through this, and its energy will be decremented.
 
-X:			Cloning mirror that duplicates the atom. One copy keeps moving forward, and the other is reflected.
+X:          Cloning mirror that duplicates the atom. One copy keeps moving forward, and the other is reflected.
 
 : (colon):  Half mirror that splits the atom in half (integer division by 2, where the remainder is added to one half). The larger half keeps
             moving forward, and the smaller half is reflected.
 
-;:			Destroys atoms when they hit this component. Serves as an endpoint.
+;:          Destroys atoms when they hit this component. Serves as an endpoint.
 
-*:			Causes the program to terminate and all atoms are destroyed after this tick. The mass of the atom that caused termination is used as
+*:          Causes the program to terminate and all atoms are destroyed after this tick. The mass of the atom that caused termination is used as
             the exit code. If multiple atoms hit the same exit cell, the highest mass will be used as the exit code.
 
-#:			Makes the atom move in a random direction (forward, left, or right). Atoms will not be reflected.
+#:          Makes the atom move in a random direction (forward, left, or right). Atoms will not be reflected.
 
-I, H:		Atoms are reflected when moving vertically or horizontally, respectively. The other way destroys the atom.
+I, H:       Atoms are reflected when moving vertically or horizontally, respectively. The other way destroys the atom.
 
 M, W, [, ]: The atom's direction is set to down, up, right, or left, respectively.
 
-|, -:		Atoms are reflected horizontally or vertically, respectively. From the edge, does nothing.
+|, -:       Atoms are reflected horizontally or vertically, respectively. From the edge, does nothing.
 
-[a-z]:		The atom's mass is set to the ASCII value of this character.
+[a-z]:      The atom's mass is set to the ASCII value of this character.
 
-[0-9]:		These are teleporters. When the atom hits a teleporter it will be transported to the next teleporter in order. Atoms will retain
-			their mass, energy, and direction upon teleportation. If there is only one teleporter, it will have no effect.
-			The order of teleporters is defined as follows:
-			* If two teleporters are in the same row, the order is left to right.
-			* Otherwise, the order is top to bottom.
-			* If there is no teleporter after the one that was hit, the atom will be telported to the first one on the grid.
+[0-9]:      These are teleporters. When the atom hits a teleporter it will be transported to the next teleporter in order. Atoms will retain
+            their mass, energy, and direction upon teleportation. If there is only one teleporter, it will have no effect.
+            The order of teleporters is defined as follows:
+            * If two teleporters are in the same row, the order is left to right.
+            * Otherwise, the order is top to bottom.
+            * If there is no teleporter after the one that was hit, the atom will be telported to the first one on the grid.
 
-':			Toggles printing mode. When an atom is in printing mode, it will print every character it encounters until the next `'`.
-			Once printing is done, the atom's mass is set to the number of characters printed.
+':          Toggles printing mode. When an atom is in printing mode, it will print every character it encounters until the next `'`.
+            Once printing is done, the atom's mass is set to the number of characters printed.
 
 `:          The atom's mass will be set to the ASCII value of the next character it hits, and that component will not be evaluated.
 
@@ -133,18 +134,18 @@ As is this one:
 
 Slightly more complex hello world:
 
-    .........../------V...!..
-    ...........|......|...r..
-    ...........|......|...!..
-    ...........|......+...l..
-    O..........|../---^---\!d
-    ......R----/..|comment|..
-    ..............| block |..
-    !l!e!h\.......\---Y---/!o
-    ......|...........|...w..
-    ......|...........|...!..
-    ......|...........|...o..
-    ------/...........\---.--
+               /......V   !  
+     Start     .      .   w  
+         \     .      .   !  
+          |    .      +   o  
+    !l!dO V    .  /...^...\!r
+          R..../  .comment.  
+                  . block .  
+    !l!e!h\       \...Y.../o!
+          .***********.   !  
+          .*Comments *.   `  
+          .* can go  *.      
+    ....../*anywhere!*\......
 
 Reverses stdin and then terminates:
 TODO: update

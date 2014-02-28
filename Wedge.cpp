@@ -17,7 +17,8 @@ using namespace fsn;
 
 
 Wedge::Wedge(char type, Grid& grid)
-: Component(type), DirectedComponent(type), value(2), grid(grid) {}
+: Component(type), DirectedComponent(type), grid(grid),
+divisor(2), minusEnergy(0) {}
 
 Direction Wedge::getDir() const {
 	switch(type) {
@@ -36,7 +37,8 @@ bool Wedge::onHit(Atom& atom) {
 	
 	if(atom.dir == dir) {
 		// Hit the inside of the fork, so consume the atom
-		value = atom.mass;
+		divisor = atom.mass;
+		minusEnergy = atom.energy;
 		return true;
 	}
 	
@@ -52,8 +54,9 @@ bool Wedge::onHit(Atom& atom) {
 		// THE PRODUCT, C0deH4cker IS NOT TO BE HELD RESPONSIBLE IN ANY WAY.
 		//
 		// Have fun!
-		int left = atom.mass / value;
+		int left = atom.mass / divisor;
 		atom.mass -= left;
+		atom.energy -= minusEnergy;
 		atom.dir = (dir + 1) & 3;
 		
 		Atom split(atom);
