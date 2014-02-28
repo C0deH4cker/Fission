@@ -18,6 +18,7 @@
 #include "IOComponent.h"
 #include "Terminator.h"
 #include "DirChanger.h"
+#include "PartialMirror.h"
 
 using namespace fsn;
 
@@ -52,10 +53,11 @@ Component* Component::create(char type, Grid& grid, Point pt) {
 		case '&':
 			return new Mirror(type);
 		
-		/* TODO: Implement these cases
 		case 'X':
 		case ':':
-		case '@':
+			return new PartialMirror(type, grid);
+		
+		/* TODO: Implement these cases
 		case 'K':
 		case 'E':
 		
@@ -102,10 +104,6 @@ bool Component::onHit(Atom& atom) {
 	bool destroy = false;
 	
 	switch(type) {
-		case ' ':
-			atom.mass = type;
-			break;
-		
 		case ';':
 			destroy = true;
 			break;
@@ -124,6 +122,24 @@ bool Component::onHit(Atom& atom) {
 		
 		case '~':
 			--atom.energy;
+			break;
+		
+		case '@': {
+			int mass = atom.mass;
+			atom.mass = atom.energy;
+			atom.energy = mass;
+			break;
+		}
+		
+		case 'J':
+			if(atom.energy > 0) {
+				--atom.energy;
+				atom.jumping = true;
+			}
+			break;
+		
+		case '`':
+			atom.setting = true;
 			break;
 		
 		default:

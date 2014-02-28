@@ -62,11 +62,11 @@ bool Mirror::onHit(Atom& atom) {
 			break;
 		
 		case '#':
-			atom.dir = (atom.dir + rand() % 3) & 3;
+			atom.dir = (atom.dir + arc4random() % 3 + 3) & 3;
 			break;
 		
 		case 'H':
-			atom.dir ^= 1;
+			atom.dir ^= 2;
 			destroy = atom.dir & 2;
 			break;
 		

@@ -20,6 +20,8 @@ namespace fsn {
 		int energy;
 		int mass;
 		bool printing;
+		bool jumping;
+		bool setting;
 		
 		Atom(const Point& startingPos, Direction startingDir);
 		

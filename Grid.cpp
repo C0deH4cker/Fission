@@ -49,8 +49,8 @@ Grid::Grid(std::istream& src)
 		for(int j = 0; j < width; j++) {
 			Component* comp;
 			if(j > prog[i].size()) {
-				// Default to '.' if after EOL
-				comp = new Component('.');
+				// Default to ' ' if after EOL
+				comp = new Component(' ');
 			}
 			else {
 				comp = Component::create(prog[i][j], *this, {j, i});
@@ -173,6 +173,13 @@ void Grid::tick(Fission& mgr) {
 			// If the atom is in printing mode, print the component's char
 			std::cout.put(comp->getType());
 			++cur.mass;
+		}
+		else if(cur.jumping) {
+			cur.jumping = false;
+		}
+		else if(cur.setting) {
+			cur.mass = comp->getType();
+			cur.setting = false;
 		}
 		else if(comp->onHit(cur) || cur.mass < 0) {
 			// Process the hit, and don't add the atom again if it's destroyed

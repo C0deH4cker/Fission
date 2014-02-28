@@ -73,7 +73,7 @@ X:			Cloning mirror that duplicates the atom. One copy keeps moving forward, and
 
 I, H:		Atoms are reflected when moving vertically or horizontally, respectively. The other way destroys the atom.
 
-M, W, [, ]: The atom's direction is set to down, up, left, or right, respectively.
+M, W, [, ]: The atom's direction is set to down, up, right, or left, respectively.
 
 |, -:		Atoms are reflected horizontally or vertically, respectively. From the edge, does nothing.
 
@@ -90,6 +90,11 @@ M, W, [, ]: The atom's direction is set to down, up, left, or right, respectivel
 			Once printing is done, the atom's mass is set to the number of characters printed.
 
 `:          The atom's mass will be set to the ASCII value of the next character it hits, and that component will not be evaluated.
+
+J:          If the atom's energy is at least 1, jump over the next component and don't evaluate it, then decrement its energy. Otherwise, this
+            component does nothing.
+
+
 
 
 All other characters are ignored completely, and atoms will pass through them without changing.

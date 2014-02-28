@@ -15,9 +15,7 @@ using namespace fsn;
 
 
 Fission::Fission(std::istream& src)
-: grid(src), code(0), stop(false) {
-	srand((unsigned)time(NULL));
-}
+: grid(src), code(0), stop(false) {}
 
 int Fission::run() {
 	do {

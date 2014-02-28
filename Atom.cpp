@@ -14,7 +14,7 @@ using namespace fsn;
 
 Atom::Atom(const Point& startingPos, Direction startingDir)
 : pos(startingPos), dir(startingDir), mass(1), energy(0),
-printing(false) {}
+printing(false), jumping(false), setting(false) {}
 
 Atom Atom::move(int w, int h) const {
 	Atom ret(*this);

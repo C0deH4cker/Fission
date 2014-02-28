@@ -22,9 +22,9 @@ DirChanger::DirChanger(char type)
 Direction DirChanger::getDir() const {
 	switch(type) {
 		case 'U': case 'W': return UP;
-		case 'L': case '[': return LEFT;
+		case 'L': case ']': return LEFT;
 		case 'D': case 'M': return DOWN;
-		case 'R': case ']': return RIGHT;
+		case 'R': case '[': return RIGHT;
 			
 		default:
 			fatal("Cell '%c' is not a DirChanger.", type);
