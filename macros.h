@@ -18,6 +18,11 @@
 	exit(EXIT_FAILURE); \
 } while(0)
 
+#define ABS(x) ({ \
+	__typeof__(x) _x = (x); \
+	_x < 0 ? -_x : _x; \
+})
+
 #define CMP(op, a, b) ({ \
 	__typeof__(a) _a = (a); \
 	__typeof__(b) _b = (b); \
