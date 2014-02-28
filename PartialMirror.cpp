@@ -7,10 +7,10 @@
 //
 
 #include "PartialMirror.h"
+#include "macros.h"
 #include "Component.h"
 #include "Grid.h"
 #include "Atom.h"
-#include "Errors.h"
 
 using namespace fsn;
 

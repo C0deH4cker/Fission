@@ -17,17 +17,20 @@ namespace fsn {
 	
 	class DynamicComponent: public virtual Component {
 	public:
-		DynamicComponent(char type);
+		DynamicComponent(char type, Grid& grid);
 		virtual ~DynamicComponent();
 		
-		virtual bool onHit(Atom& atom) { return false; }
+		virtual bool onHit(Atom& atom)=0;
 		
 		/*!
 		 Called once per tick to perform logic updates.
 		 @param grid Reference to the grid object to change global state.
 		 @return True if this component should stop ticking, false otherwise.
 		 */
-		virtual bool onTick(Grid& grid)=0;
+		virtual bool onTick()=0;
+		
+	protected:
+		Grid& grid;
 	};
 }
 

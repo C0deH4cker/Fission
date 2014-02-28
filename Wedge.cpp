@@ -7,10 +7,10 @@
 //
 
 #include "Wedge.h"
+#include "macros.h"
 #include "Atom.h"
 #include "Component.h"
 #include "Direction.h"
-#include "Errors.h"
 #include "Grid.h"
 
 using namespace fsn;

@@ -8,9 +8,9 @@
 
 #include "IOComponent.h"
 #include <iostream>
+#include "macros.h"
 #include "Atom.h"
 #include "Grid.h"
-#include "Errors.h"
 
 using namespace fsn;
 

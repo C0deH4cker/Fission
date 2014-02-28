@@ -20,6 +20,7 @@
 #include "DirChanger.h"
 #include "PartialMirror.h"
 #include "Cloner.h"
+#include "Storage.h"
 
 using namespace fsn;
 
@@ -29,12 +30,9 @@ Component* Component::create(char type, Grid& grid, Point pt) {
 		case 'U':
 		case 'L':
 		case 'D':
-		case 'R': {
-			DirChanger* ret = new DirChanger(type);
-			grid.spawn(Atom(pt, ret->getDir()));
-			return ret;
-		}
-		
+		case 'R':
+			grid.spawn(Atom(pt, DirChanger::getDir(type)));
+			/* FALLTHROUGH */
 		case 'M':
 		case 'W':
 		case '[':
@@ -58,10 +56,11 @@ Component* Component::create(char type, Grid& grid, Point pt) {
 		case ':':
 			return new PartialMirror(type, grid);
 		
-		/* TODO: Implement these cases
 		case 'K':
-		case 'E':
-		*/
+			return new Stack(type, grid);
+			
+		case 'Q':
+			return new Queue(type, grid);
 		
 		case '{':
 		case '}':
@@ -147,9 +146,6 @@ bool Component::onHit(Atom& atom) {
 		default:
 			if(islower(type)) {
 				atom.mass = type;
-			}
-			else {
-				//std::cerr << "Unknown: " << (char)type << std::endl;
 			}
 			break;
 	}

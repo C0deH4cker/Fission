@@ -7,19 +7,16 @@
 //
 
 #include "DirChanger.h"
+#include "macros.h"
 #include "DirectedComponent.h"
 #include "Component.h"
-#include "Errors.h"
 #include "Atom.h"
 #include "Direction.h"
 
 using namespace fsn;
 
 
-DirChanger::DirChanger(char type)
-: Component(type), DirectedComponent(type) {}
-
-Direction DirChanger::getDir() const {
+Direction DirChanger::getDir(char type) {
 	switch(type) {
 		case 'U': case 'W': return UP;
 		case 'L': case ']': return LEFT;
@@ -29,6 +26,13 @@ Direction DirChanger::getDir() const {
 		default:
 			fatal("Cell '%c' is not a DirChanger.", type);
 	}
+}
+
+DirChanger::DirChanger(char type)
+: Component(type), DirectedComponent(type) {}
+
+Direction DirChanger::getDir() const {
+	return getDir(type);
 }
 
 bool DirChanger::onHit(Atom& atom) {

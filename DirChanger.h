@@ -19,6 +19,8 @@ namespace fsn {
 	
 	class DirChanger: public virtual DirectedComponent {
 	public:
+		static Direction getDir(char type);
+		
 		DirChanger(char type);
 		
 		virtual Direction getDir() const;

@@ -152,8 +152,8 @@ void Grid::tick(Fission& mgr) {
 	std::unordered_set<DynamicComponent*>::iterator dyn = dynamics.begin();
 	while(dyn != dynamics.end()) {
 		// Tick the component
-		if((*dyn)->onTick(*this)) {
-			// Remove it if it returned true
+		if(!(*dyn)->onTick()) {
+			// Stop ticking
 			dyn = dynamics.erase(dyn);
 		}
 		else {
@@ -191,8 +191,8 @@ void Grid::tick(Fission& mgr) {
 		atoms.push(cur);
 	}
 	
-	// No atoms left?
-	if(atoms.empty() || stop) {
+	// No atoms left and no ticking components?
+	if((atoms.empty() && dynamics.empty()) || stop) {
 		mgr.terminate(status);
 	}
 }

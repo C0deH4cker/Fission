@@ -19,16 +19,16 @@ When there are no more atoms left on the grid, the program exits with status 0 (
 /, \:       Purely mirrors to turn control flow.
 
 ^, V, <, >: From the sides, these are mirrors to turn control flow.
-            From the vertex, these are splitters. The atom splits in two: its mass is divided by this component's stored mass (default 2),
-            and the energy of both atoms is decreased by this component's stored energy (default 0). The left half of the split atom is
-            set to (mass / value), and the right half is set to (mass - left).
-            When an atom hits the back (in the split), it is stored in the component (mass and energy).
+            These are fission reactors when hit at the vertex. The atom splits in two: its mass is divided by this component's stored
+            mass (default 2), and the energy of both atoms is decreased by this component's stored energy (default 0). The left half
+            of the split atom is set to (mass / value), and the right half is set to (mass - left).
+            When an atom hits the back (in the split), its mass and energy are stored in this component.
 
 U, D, L, R: Spawns an atom at this position when the program starts. Direction is up, down, left, or right, respectively.
             When another atom hits this component, its direction is changed to the component's direction.
 
-A, Y, {, }: Joiners when hit from the sides. When an atom hits a side, it waits until an atom hits the other side. At this point,
-            the two atoms are joined by adding their masses and energy levels. This atom is released from the vertex.
+A, Y, {, }: These are fusion reactors. When an atom hits a side, it waits until an atom hits the other side. At this point,
+            the two atoms are fused together by adding their masses and energy levels. This atom is released from the vertex.
             Cloner when hit from the vertex (mass is multiplied by this component's value, default of 1). The two cloned atoms go 90
             degrees to the left and right of the component's vertex.
             Sets this component's value when hit from the back using the atom's mass, and that atom is then destroyed.
@@ -51,11 +51,12 @@ $, ~:       Increments or decrements the atom's energy, respectively.
 
 @:          Swaps the atom's mass and energy.
 
-K:          Acts as a stack: atoms that hit this from above, below, or the right are pushed to the stack. When it's hit from the left by
-            an atom, every atom stored in the stack is popped, one at a time, and the atom that triggered this is destroyed. All atoms
-            exit the stack from the left.
+K:          Acts as a stack: atoms that hit this are pushed to the stack. When it's hit from by an atom with at least 1 energy unit, every
+            atom stored in the stack is popped, one at a time, and the atom that triggered this is destroyed. All atoms exit the stack moving
+            the same direction they were when they entered. The mass of the atom which hit this component is used as the number of ticks between releasing each atom. For example, if an energized atom with a mass of <= 1 hits the stack, atoms will be popped out one
+            every tick. An atom with a mass of 2 will make the atoms be popped once every other tick.
 
-E:          Same as a stack, except this is a queue (FIFO rather than LIFO).
+Q:          Same as a stack, except this is a queue (FIFO rather than LIFO).
 
 Z, S:       Act as rotational mirrors. Atoms will turn 90 degrees to the left or right, respectively, when the hit this component. Any atom with
             at least 1 energy will pass straight through this, and its energy will be decremented.
@@ -92,8 +93,8 @@ M, W, [, ]: The atom's direction is set to down, up, right, or left, respectivel
 
 `:          The atom's mass will be set to the ASCII value of the next character it hits, and that component will not be evaluated.
 
-J:          If the atom's energy is at least 1, jump over the next component and don't evaluate it, then decrement its energy. Otherwise, this
-            component does nothing.
+J:          Causes any atom that hits this to instantly jump forward a certain number of cells, depending on its energy. An atom that has
+            1 energy will jump forward over 1 component after this one, if it has 0 energy, it will jump to the next element, and if it has negative energy it will jump backwards. The atom's energy is spent by jumping, so it will be 0 when it lands.
 
 
 
@@ -147,14 +148,8 @@ Slightly more complex hello world:
           .* can go  *.      
     ....../*anywhere!*\......
 
-Reverses stdin and then terminates:
-TODO: update
+Reverses stdin:
 
-    /++//.\
-    A$ZKR+<
-    ..O&.?/
-
-Reverses stdin (nonterminating):
-
-    .O/?Y\
-    1K%1U/
+    $SX/
+    \S?L
+    K\O

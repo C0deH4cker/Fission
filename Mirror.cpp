@@ -8,10 +8,9 @@
 
 #include "Mirror.h"
 #include <cstdlib>
-#include <iostream>
+#include "macros.h"
 #include "Atom.h"
 #include "Direction.h"
-#include "Errors.h"
 
 using namespace fsn;
 

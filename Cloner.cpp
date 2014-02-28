@@ -7,12 +7,12 @@
 //
 
 #include "Cloner.h"
+#include "macros.h"
 #include "Component.h"
 #include "DirectedComponent.h"
 #include "Grid.h"
 #include "Atom.h"
 #include "Direction.h"
-#include "Errors.h"
 
 using namespace fsn;
 
@@ -34,8 +34,10 @@ bool Cloner::onHit(Atom& atom) {
 		// The atom hit the vertex, so clone it because the law of conservation
 		// of mass totally says this is okay and cool to do
 		atom.mass *= multiplier;
-		Atom clone(atom);
+		atom.dir = (atom.dir + 1) & 3;
 		
+		Atom clone(atom);
+		clone.dir ^= 2;
 		grid.spawn(clone);
 	}
 	else {

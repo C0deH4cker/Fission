@@ -11,10 +11,8 @@
 using namespace fsn;
 
 
-DynamicComponent::DynamicComponent(char type)
-: Component(type) {}
+DynamicComponent::DynamicComponent(char type, Grid& grid)
+: Component(type), grid(grid) {}
 
-DynamicComponent::~DynamicComponent() {
-	
-}
+DynamicComponent::~DynamicComponent() {}
 
