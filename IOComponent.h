@@ -16,13 +16,12 @@ namespace fsn {
 	
 	class IOComponent: public virtual Component {
 	public:
-		IOComponent(char type, Grid& grid);
+		IOComponent(char type);
 		
 		virtual bool onHit(Atom& atom);
 		
 	private:
 		bool pastEOF;
-		Grid& grid;
 	};
 }
 

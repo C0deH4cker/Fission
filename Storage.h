@@ -45,11 +45,6 @@ namespace fsn {
 		}
 		
 		virtual bool onTick() {
-			// XXX: Is this if statement necessary?
-			if(stored.empty()) {
-				return false;
-			}
-			
 			if(++curTick % tickspeed == 0) {
 				grid.spawn(getNext(stored));
 				stored.pop();

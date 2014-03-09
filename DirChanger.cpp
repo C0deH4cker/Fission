@@ -8,6 +8,7 @@
 
 #include "DirChanger.h"
 #include "macros.h"
+#include "tokens.h"
 #include "DirectedComponent.h"
 #include "Component.h"
 #include "Atom.h"
@@ -18,10 +19,10 @@ using namespace fsn;
 
 Direction DirChanger::getDir(char type) {
 	switch(type) {
-		case 'U': case 'W': return UP;
-		case 'L': case ']': return LEFT;
-		case 'D': case 'M': return DOWN;
-		case 'R': case '[': return RIGHT;
+		case TOK_SPAWNER_UP:    case TOK_DIR_UP:	    return UP;
+		case TOK_SPAWNER_LEFT:  case TOK_DIR_LEFT:  return LEFT;
+		case TOK_SPAWNER_DOWN:  case TOK_DIR_DOWN:  return DOWN;
+		case TOK_SPAWNER_RIGHT: case TOK_DIR_RIGHT: return RIGHT;
 			
 		default:
 			fatal("Cell '%c' is not a DirChanger.", type);

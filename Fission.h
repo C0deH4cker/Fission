@@ -15,7 +15,7 @@
 namespace fsn {
 	class Fission {
 	public:
-		Fission(std::istream& src);
+		Fission(std::istream& src, bool skipShebang = false);
 		
 		int run();
 		bool running() const;

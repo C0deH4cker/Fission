@@ -16,7 +16,7 @@ Teleporter::Teleporter(char type, Grid& grid, int index)
 : Component(type), grid(grid), index(index) {}
 
 bool Teleporter::onHit(Atom& atom) {
-	grid.teleport(atom, index);
+	grid.teleport(atom, type - '0', index);
 	return false;
 }
 

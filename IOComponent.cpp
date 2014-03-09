@@ -9,14 +9,14 @@
 #include "IOComponent.h"
 #include <iostream>
 #include "macros.h"
+#include "tokens.h"
 #include "Atom.h"
-#include "Grid.h"
 
 using namespace fsn;
 
 
-IOComponent::IOComponent(char type, Grid& grid)
-: Component(type), pastEOF(false), grid(grid) {
+IOComponent::IOComponent(char type)
+: Component(type), pastEOF(false) {
 	
 }
 
@@ -25,16 +25,20 @@ bool IOComponent::onHit(Atom& atom) {
 	bool destroy = false;
 	
 	switch(type) {
-		case '!':
+		case TOK_IO_NEWLINE:
+			std::cout.put('\n');
+			break;
+		
+		case TOK_IO_OUTCHAR:
 			std::cout.put((char)atom.mass);
 			break;
 			
-		case 'O':
+		case TOK_IO_ENDCHAR:
 			std::cout.put((char)atom.mass);
 			destroy = true;
 			break;
 		
-		case '?':
+		case TOK_IO_INCHAR:
 			if(pastEOF) {
 				return true;
 			}
@@ -49,7 +53,7 @@ bool IOComponent::onHit(Atom& atom) {
 			}
 			break;
 		
-		case '\'':
+		case TOK_IO_OUTSTR:
 			if(atom.printing) {
 				atom.printing = false;
 			}

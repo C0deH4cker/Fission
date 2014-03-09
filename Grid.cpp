@@ -16,21 +16,29 @@
 #include <map>
 #include <set>
 #include <unordered_set>
+#include "macros.h"
+#include "tokens.h"
 #include "Atom.h"
 #include "Component.h"
 #include "DynamicComponent.h"
 #include "Fission.h"
+#include "Teleporter.h"
 
 using namespace fsn;
 
 
-Grid::Grid(std::istream& src)
-: status(0), stop(false), width(0), height(0) {
+Grid::Grid(std::istream& src, bool skipShebang)
+: status(0), stop(false), width(0), height(0), indices{0} {
 	std::vector<std::string> prog;
 	std::string line;
 	
+	// Read the first line but don't process it
+	if(skipShebang) {
+		std::getline(src, line);
+	}
+	
 	// Read in every line, keeping track of the longest one
-	while(getline(src, line)) {
+	while(std::getline(src, line)) {
 		if(line.size() > width) {
 			width = (int)line.size();
 		}
@@ -54,11 +62,6 @@ Grid::Grid(std::istream& src)
 			}
 			else {
 				comp = Component::create(prog[i][j], *this, {j, i});
-				
-				// Handle teleporters
-				if(isdigit(prog[i][j])) {
-					teleporters[prog[i][j] - '0'].insert({j, i});
-				}
 			}
 			
 			row.push_back(comp);
@@ -77,74 +80,15 @@ Grid::~Grid() {
 }
 
 //#define DEBUGGING
+#ifdef DEBUGGING
+#include <unistd.h>
+#endif
 void Grid::tick(Fission& mgr) {
 	std::priority_queue<Atom, std::vector<Atom>, std::greater<Atom> > next;
 	
 #ifdef DEBUGGING
 	int i = 0;
-	std::cerr.put('\n');
-#endif
-	
-	// Move all atoms and store them in a new atom map
-	while(!atoms.empty()) {
-		Atom cur(atoms.top());
-		atoms.pop();
-		
-#ifdef DEBUGGING
-		while(Point{i % width, i / width} < cur.pos) {
-			std::cerr.put(cells[i / width][i % width]->getType());
-			
-			if(++i % width == 0) {
-				std::cerr.put('\n');
-			}
-		}
-		std::cerr << "";
-		if(++i % width == 0) {
-			std::cerr.put('\n');
-		}
-#endif
-		
-		// See if this atom was teleported last tick
-		std::map<Atom, int>::iterator t(teleported.find(cur));
-		if(t != teleported.end()) {
-			// Perform the teleportation
-			std::set<Point>& tp(teleporters[t->second]);
-			
-			// At least 2 teleporters of this index
-			if(tp.size() >= 2) {
-				// Find the next teleporter by order
-				bool moved = false;
-				for(auto it = tp.begin(); it != tp.end(); ++it) {
-					if(*it > cur.pos) {
-						// Jump there
-						cur.pos = *it;
-						moved = true;
-					}
-				}
-				
-				// If it didn't find a bigger one, go to the first teleporter
-				if(!moved) {
-					cur.pos = *tp.begin();
-				}
-			}
-			
-			// Remove the atom once it has been successfully teleported.
-			teleported.erase(t);
-		}
-		
-		// Move the atom
-		next.push(cur.move(width, height));
-	}
-	
-#ifdef DEBUGGING
-	while(i < width * height) {
-		if(i % width == 0) {
-			std::cerr.put('\n');
-		}
-		
-		std::cerr.put(cells[i / width][i % width]->getType());
-		++i;
-	}
+	usleep(1000*1000 / 4);
 	std::cerr.put('\n');
 #endif
 	
@@ -161,6 +105,41 @@ void Grid::tick(Fission& mgr) {
 		}
 	}
 	
+	// Move all atoms and store them in a new atom map
+	while(!atoms.empty()) {
+		Atom cur(atoms.top());
+		atoms.pop();
+		
+#ifdef DEBUGGING
+		while(Point{i % width, i / width} < cur.pos) {
+			std::cerr.put(cells[i / width][i % width]->getType());
+			
+			if(++i % width == 0) {
+				std::cerr.put('\n');
+			}
+		}
+		std::cerr << ""; // Easy to see
+		if(++i % width == 0) {
+			std::cerr.put('\n');
+		}
+#endif
+				
+		// Move the atom
+		next.push(cur.move(width, height));
+	}
+	
+#ifdef DEBUGGING
+	while(i < width * height) {
+		if(i % width == 0) {
+			std::cerr.put('\n');
+		}
+		
+		std::cerr.put(cells[i / width][i % width]->getType());
+		++i;
+	}
+	std::cerr.put('\n');
+#endif
+	
 	// Process each new collision
 	while(!next.empty()) {
 		// Pop the top atom
@@ -170,13 +149,10 @@ void Grid::tick(Fission& mgr) {
 		// Get the atom's position and the component it's on
 		Component* comp = cells[cur.pos.y][cur.pos.x];
 		
-		if(cur.printing && comp->getType() != '\'') {
+		if(cur.printing && comp->getType() != TOK_IO_OUTSTR) {
 			// If the atom is in printing mode, print the component's char
 			std::cout.put(comp->getType());
 			++cur.mass;
-		}
-		else if(cur.jumping) {
-			cur.jumping = false;
 		}
 		else if(cur.setting) {
 			cur.mass = comp->getType();
@@ -201,8 +177,15 @@ void Grid::spawn(const Atom& atom) {
 	atoms.push(atom);
 }
 
-void Grid::teleport(const Atom& atom, int index) {
-	teleported[atom] = index;
+void Grid::teleport(Atom& atom, int number, int from) {
+	const std::vector<Point>& tp(teleporters[number]);
+	atom.pos = tp[(from + 1) % tp.size()];
+}
+
+Teleporter* Grid::addTeleporter(char type, Point pt) {
+	int num = type - '0';
+	teleporters[num].push_back(pt);
+	return new Teleporter(type, *this, indices[num]++);
 }
 
 void Grid::addDynamic(DynamicComponent* dyn) {

@@ -9,6 +9,7 @@
 #include "Mirror.h"
 #include <cstdlib>
 #include "macros.h"
+#include "tokens.h"
 #include "Atom.h"
 #include "Direction.h"
 
@@ -22,27 +23,27 @@ bool Mirror::onHit(Atom& atom) {
 	bool destroy = false;
 	
 	switch(type) {
-		case '/':
+		case TOK_MIRROR_URDL:
 			// 00:11, 01:10, 10:01, 11:00
 			atom.dir ^= 3;
 			break;
 		
-		case '\\':
+		case TOK_MIRROR_ULDR:
 			// 00:01, 01:00, 10:11, 11:10
 			atom.dir ^= 1;
 			break;
 		
-		case '|':
+		case TOK_MIRROR_VERTICAL:
 			// 00:00, 01:11, 10:10, 11:01
 			atom.dir ^= (atom.dir & 1) << 1;
 			break;
 		
-		case '-':
+		case TOK_MIRROR_HORIZONTAL:
 			// 00:10, 01:01, 10:00, 11:11
 			atom.dir ^= (atom.dir & ~1) << 1;
 			break;
 		
-		case 'Z':
+		case TOK_MIRROR_TURN_LEFT:
 			if(atom.energy >= 1) {
 				--atom.energy;
 			}
@@ -51,7 +52,7 @@ bool Mirror::onHit(Atom& atom) {
 			}
 			break;
 		
-		case 'S':
+		case TOK_MIRROR_TURN_RIGHT:
 			if(atom.energy >= 1) {
 				--atom.energy;
 			}
@@ -60,21 +61,11 @@ bool Mirror::onHit(Atom& atom) {
 			}
 			break;
 		
-		case '#':
+		case TOK_MIRROR_RANDOM:
 			atom.dir = (atom.dir + arc4random() % 3 + 3) & 3;
 			break;
 		
-		case 'H':
-			atom.dir ^= 2;
-			destroy = atom.dir & 2;
-			break;
-		
-		case 'I':
-			atom.dir ^= 2;
-			destroy = atom.dir & 1;
-			break;
-		
-		case '%':
+		case TOK_MIRROR_ENERGY_URDL:
 			if(atom.energy >= 1) {
 				--atom.energy;
 				atom.dir ^= 1;
@@ -84,7 +75,7 @@ bool Mirror::onHit(Atom& atom) {
 			}
 			break;
 		
-		case '&':
+		case TOK_MIRROR_ENERGY_ULDR:
 			if(atom.energy >= 1) {
 				--atom.energy;
 				atom.dir ^= 3;

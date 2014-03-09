@@ -8,6 +8,7 @@
 
 #include "Wedge.h"
 #include "macros.h"
+#include "tokens.h"
 #include "Atom.h"
 #include "Component.h"
 #include "Direction.h"
@@ -22,10 +23,10 @@ divisor(2), minusEnergy(0) {}
 
 Direction Wedge::getDir() const {
 	switch(type) {
-		case '^': return UP;
-		case '<': return LEFT;
-		case 'V': return DOWN;
-		case '>': return RIGHT;
+		case TOK_WEDGE_UP:    return UP;
+		case TOK_WEDGE_LEFT:  return LEFT;
+		case TOK_WEDGE_DOWN:  return DOWN;
+		case TOK_WEDGE_RIGHT: return RIGHT;
 		
 		default:
 			fatal("Cell '%c' is not a Wedge.", type);
@@ -47,11 +48,11 @@ bool Wedge::onHit(Atom& atom) {
 		//
 		// WARNING: DO NOT TRY THIS AT HOME. SPLITTING ATOMS IS ONLY TO BE DONE
 		// BY TRAINED PROFESSIONALS. BY USING THE PRODUCT YOU ACKNOWLEDGE THAT
-		// THERE IS NO WARRANTY, EXPRESS OR IMPLIED,	 AND THAT C0deH4cker IS NOT
+		// THERE IS NO WARRANTY, EXPRESS OR IMPLIED,	 AND THAT C0DEH4CKER IS NOT
 		// LIABLE FOR ANY INJURIES, DECAPITATIONS, OR SPONTANEOUS COMBUSTIONS
 		// THAT MAY RESULT FROM YOUR USE OF THE PRODUCT. IF THE WORLD AND/OR
 		// UNIVERSE COME TO A FIERY END AS A RESULT OF SPLITTING ATOMS WITH
-		// THE PRODUCT, C0deH4cker IS NOT TO BE HELD RESPONSIBLE IN ANY WAY.
+		// THE PRODUCT, C0DEH4CKER IS NOT TO BE HELD RESPONSIBLE IN ANY WAY.
 		//
 		// Have fun!
 		int left = atom.mass / divisor;

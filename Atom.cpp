@@ -14,18 +14,37 @@ using namespace fsn;
 
 Atom::Atom(const Point& startingPos, Direction startingDir)
 : pos(startingPos), dir(startingDir), mass(1), energy(0),
-printing(false), jumping(false), setting(false) {}
+printing(false), setting(false) {}
 
-Atom Atom::move(int w, int h) const {
+Atom::Atom(const Atom& other)
+: pos(other.pos), dir(other.dir), mass(other.mass), energy(other.energy),
+printing(other.printing), setting(other.setting) {}
+
+Atom& Atom::operator=(const Atom& other) {
+	pos = other.pos;
+	dir = other.dir;
+	mass = other.mass;
+	energy = other.energy;
+	printing = other.printing;
+	setting = other.setting;
+	return *this;
+}
+
+
+Atom Atom::move(int w, int h, int steps) const {
 	Atom ret(*this);
 	
-	int d = (dir & 2) - 1;
+	if(steps < 0) {
+		ret.dir ^= 2;
+	}
+	
+	int d = steps * ((dir & 2) - 1);
 	
 	if(dir & 1) {
-		ret.pos.x = (int)(pos.x + d + w) % w;
+		ret.pos.x = ((pos.x + d) % w + w) % w;
 	}
 	else {
-		ret.pos.y = (int)(pos.y + d + h) % h;
+		ret.pos.y = ((pos.y + d) % h + h) % h;
 	}
 	
 	return ret;

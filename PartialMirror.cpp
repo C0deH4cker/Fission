@@ -8,6 +8,7 @@
 
 #include "PartialMirror.h"
 #include "macros.h"
+#include "tokens.h"
 #include "Component.h"
 #include "Grid.h"
 #include "Atom.h"
@@ -20,7 +21,7 @@ PartialMirror::PartialMirror(char type, Grid& grid)
 
 bool PartialMirror::onHit(Atom& atom) {
 	switch(type) {
-		case ':': {
+		case TOK_PARTIAL_SPLITTER: {
 			int smaller = atom.mass >> 1;
 			atom.mass -= smaller;
 			
@@ -32,7 +33,7 @@ bool PartialMirror::onHit(Atom& atom) {
 			break;
 		}
 		
-		case 'X': {
+		case TOK_PARTIAL_CLONER: {
 			Atom reflected(atom);
 			reflected.dir ^= 2;
 			

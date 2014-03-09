@@ -20,12 +20,14 @@ namespace fsn {
 		int energy;
 		int mass;
 		bool printing;
-		bool jumping;
 		bool setting;
 		
 		Atom(const Point& startingPos, Direction startingDir);
+		Atom(const Atom& other);
 		
-		Atom move(int w, int h) const;
+		Atom& operator=(const Atom& other);
+		
+		Atom move(int w, int h, int steps = 1) const;
 	};
 	
 	bool operator==(const Atom& a, const Atom& b);

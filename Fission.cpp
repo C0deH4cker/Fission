@@ -11,8 +11,8 @@
 using namespace fsn;
 
 
-Fission::Fission(std::istream& src)
-: grid(src), code(0), stop(false) {}
+Fission::Fission(std::istream& src, bool skipShebang)
+: grid(src, skipShebang), code(0), stop(false) {}
 
 int Fission::run() {
 	do {

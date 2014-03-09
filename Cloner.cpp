@@ -8,6 +8,7 @@
 
 #include "Cloner.h"
 #include "macros.h"
+#include "tokens.h"
 #include "Component.h"
 #include "DirectedComponent.h"
 #include "Grid.h"
@@ -64,10 +65,10 @@ bool Cloner::onHit(Atom& atom) {
 
 Direction Cloner::getDir() const {
 	switch(type) {
-		case 'A': return UP;
-		case '{': return LEFT;
-		case 'Y': return DOWN;
-		case '}': return RIGHT;
+		case TOK_CLONER_UP:    return UP;
+		case TOK_CLONER_LEFT:  return LEFT;
+		case TOK_CLONER_DOWN:  return DOWN;
+		case TOK_CLONER_RIGHT: return RIGHT;
 		
 		default:
 			fatal("Cell '%c' is not a Cloner.", type);
