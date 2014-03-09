@@ -3,7 +3,7 @@
 The programming language that defies the laws of conservation of mass and energy.
 
 
-Fission is 2-dimensional esoteric programming language. The program is comprised of atoms moving around. Each atom has a mass and an energy level. When
+Fission is a 2-dimensional esoteric programming language. The program is comprised of atoms moving around. Each atom has a mass and an energy level. When
 an atom is first created, it has a mass of 1 unit and 0 energy. It moves in a straight line either up, down, left or right. It can change direction
 through various means such as bouncing off of mirrors.
 
