@@ -9,24 +9,29 @@
 #ifndef _FSN_FISSION_H_
 #define _FSN_FISSION_H_
 
-#include <istream>
+#include <string>
 #include "Grid.h"
 
 namespace fsn {
 	class Fission {
 	public:
-		Fission(std::istream& src, bool skipShebang = false);
+		Fission();
+		~Fission();
 		
-		int run();
+		int run(int argc, char* argv[]);
 		bool running() const;
 		void terminate(int status);
 		
 	private:
-		Grid grid;
+		bool skipShebang;
+		bool trace;
+		Grid* grid;
 		bool stop;
 		int code;
 		
 		void tick();
+		int usage(const std::string& argv0);
+		int mainloop();
 	};
 }
 

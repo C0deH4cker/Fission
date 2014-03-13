@@ -33,7 +33,7 @@ namespace fsn {
 		Grid(std::istream& src, bool skipShebang = false);
 		~Grid();
 		
-		void tick(Fission& mgr);
+		void tick(Fission& mgr, bool trace = false);
 		void spawn(const Atom& atom);
 		void teleport(Atom& atom, int number, int from);
 		Teleporter* addTeleporter(char type, Point pt);

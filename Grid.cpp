@@ -16,6 +16,7 @@
 #include <map>
 #include <set>
 #include <unordered_set>
+#include <unistd.h>
 #include "macros.h"
 #include "tokens.h"
 #include "Atom.h"
@@ -79,18 +80,14 @@ Grid::~Grid() {
 	}
 }
 
-//#define DEBUGGING
-#ifdef DEBUGGING
-#include <unistd.h>
-#endif
-void Grid::tick(Fission& mgr) {
+void Grid::tick(Fission& mgr, bool trace) {
 	std::priority_queue<Atom, std::vector<Atom>, std::greater<Atom> > next;
 	
-#ifdef DEBUGGING
 	int i = 0;
-	usleep(1000*1000 / 4);
-	std::cerr.put('\n');
-#endif
+	if(trace) {
+		usleep(1000*1000 / 4);
+		std::cerr.put('\n');
+	}
 	
 	// Tick all dynamic components
 	std::unordered_set<DynamicComponent*>::iterator dyn = dynamics.begin();
@@ -110,35 +107,39 @@ void Grid::tick(Fission& mgr) {
 		Atom cur(atoms.top());
 		atoms.pop();
 		
-#ifdef DEBUGGING
-		while(Point{i % width, i / width} < cur.pos) {
+		if(trace) {
+			while(Point{i % width, i / width} < cur.pos) {
+				// Print the component
+				std::cerr.put(cells[i / width][i % width]->getType());
+				
+				if(++i % width == 0) {
+					std::cerr.put('\n');
+				}
+			}
+			
+			// Print the atom
+			std::cerr << "\u269b";
+			
+			if(++i % width == 0) {
+				std::cerr.put('\n');
+			}
+		}
+		
+		// Move the atom
+		next.push(cur.move(width, height));
+	}
+	
+	if(trace) {
+		while(i < width * height) {
+			// Print the component
 			std::cerr.put(cells[i / width][i % width]->getType());
 			
 			if(++i % width == 0) {
 				std::cerr.put('\n');
 			}
 		}
-		std::cerr << ""; // Easy to see
-		if(++i % width == 0) {
-			std::cerr.put('\n');
-		}
-#endif
-				
-		// Move the atom
-		next.push(cur.move(width, height));
+		std::cerr.put('\n');
 	}
-	
-#ifdef DEBUGGING
-	while(i < width * height) {
-		if(i % width == 0) {
-			std::cerr.put('\n');
-		}
-		
-		std::cerr.put(cells[i / width][i % width]->getType());
-		++i;
-	}
-	std::cerr.put('\n');
-#endif
 	
 	// Process each new collision
 	while(!next.empty()) {
