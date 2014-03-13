@@ -102,9 +102,9 @@ Slightly more complex hello world:
 
 Reverses stdin:
 
-    $SX/
-    \S?L
-    K\O
+    Z~]Z?L
+    K  A /
+    \!/;
 
 Equivalent pseudocode:
 
