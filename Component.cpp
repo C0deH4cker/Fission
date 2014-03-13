@@ -57,10 +57,10 @@ Component* Component::create(char type, Grid& grid, Point pt) {
 			return new PartialMirror(type, grid);
 		
 		case TOK_STACK:
-			return new Stack(type, grid);
+			return new Stack(type);
 			
 		case TOK_QUEUE:
-			return new Queue(type, grid);
+			return new Queue(type);
 		
 		case TOK_CLONER_UP:
 		case TOK_CLONER_LEFT:

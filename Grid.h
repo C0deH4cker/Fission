@@ -42,8 +42,8 @@ namespace fsn {
 		void terminate(int status);
 		
 	private:
-		std::vector<std::vector<Component*> > cells;
-		std::priority_queue<Atom, std::vector<Atom>, std::greater<Atom> > atoms;
+		std::vector<std::vector<Component*>> cells;
+		std::priority_queue<Atom, std::vector<Atom>, std::greater<Atom>> atoms;
 		std::vector<Point> teleporters[10];
 		std::unordered_set<DynamicComponent*> dynamics;
 		int indices[10];

@@ -81,7 +81,7 @@ Grid::~Grid() {
 }
 
 void Grid::tick(Fission& mgr, bool trace) {
-	std::priority_queue<Atom, std::vector<Atom>, std::greater<Atom> > next;
+	std::priority_queue<Atom, std::vector<Atom>, std::greater<Atom>> next;
 	
 	int i = 0;
 	if(trace) {

@@ -10,7 +10,6 @@
 #define _FSN_STORAGE_H_
 
 #include "Component.h"
-#include "DynamicComponent.h"
 #include <stack>
 #include <queue>
 #include "macros.h"
@@ -18,53 +17,55 @@
 #include "Atom.h"
 
 namespace fsn {
+	struct StoredData {
+		int mass;
+		int energy;
+	};
+	
 	template <class T>
-	class Storage: public virtual DynamicComponent {
+	class Storage: public virtual Component {
 	public:
-		static const Atom& getNext(std::stack<Atom> stack) {
+		static const StoredData& getTop(std::stack<StoredData> stack) {
 			return stack.top();
 		}
 		
-		static const Atom& getNext(std::queue<Atom> queue) {
+		static const StoredData& getTop(std::queue<StoredData> queue) {
 			return queue.front();
 		}
 		
-		Storage(char type, Grid& grid)
-		: Component(type), DynamicComponent(type, grid), tickspeed(-1) {}
+		Storage(char type)
+		: Component(type) {}
 		
 		virtual bool onHit(Atom& atom) {
-			if(atom.energy > 0) {
-				tickspeed = MAX(atom.mass, 1);
-				grid.addDynamic(this);
+			bool destroy = false;
+			
+			if(atom.energy >= 0) {
+				// Push
+				stored.push({atom.mass, atom.energy});
+				destroy = true;
+			}
+			else if(stored.empty()) {
+				// Pop, but empty, so reflect
+				atom.dir ^= 2;
+				atom.energy = -atom.energy;
 			}
 			else {
-				stored.push(atom);
-			}
-			
-			return true;
-		}
-		
-		virtual bool onTick() {
-			if(stored.empty()) {
-				return false;
-			}
-			
-			if(++curTick % tickspeed == 0) {
-				grid.spawn(getNext(stored));
+				// Pop
+				const StoredData& top = getTop(stored);
+				atom.mass = top.mass;
+				atom.energy = top.energy;
 				stored.pop();
 			}
 			
-			return !stored.empty();
+			return destroy;
 		}
 		
 	private:
-		int tickspeed;
-		int curTick;
 		T stored;
 	};
 	
-	typedef Storage<std::stack<Atom> > Stack;
-	typedef Storage<std::queue<Atom> > Queue;
+	typedef Storage<std::stack<StoredData>> Stack;
+	typedef Storage<std::queue<StoredData>> Queue;
 }
 
 
