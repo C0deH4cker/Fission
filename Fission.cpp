@@ -27,6 +27,8 @@ int Fission::run(int argc, char* argv[]) {
 	std::ifstream src;
 	bool skipShebang = false;
 	std::unordered_map<std::string, std::function<int()>> options;
+
+    trace = false;
 	
 	options["-s"] = options["--script"] = [&]() {
 		skipShebang = true;

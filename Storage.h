@@ -25,11 +25,11 @@ namespace fsn {
 	template <class T>
 	class Storage: public virtual Component {
 	public:
-		static const StoredData& getTop(std::stack<StoredData> stack) {
+		static const StoredData& getTop(std::stack<StoredData>& stack) {
 			return stack.top();
 		}
 		
-		static const StoredData& getTop(std::queue<StoredData> queue) {
+		static const StoredData& getTop(std::queue<StoredData>& queue) {
 			return queue.front();
 		}
 		
