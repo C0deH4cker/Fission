@@ -42,7 +42,7 @@ atom with nonzero mass).
 |`*`                | Terminator | Causes the program to terminate and all atoms are destroyed after this tick. The mass of the atom that caused termination is used as the exit code. If multiple atoms hit the same exit cell within the same tick, the highest mass will be used as the exit code. |
 |`#`                | Randomizer | Makes the atom move in a random direction (forward, left, or right). Atoms will not be reflected. |
 |`M`, `W`, `[`, `]` | DirSetter | The atom's direction is set to down, up, right, or left, respectively. |
-|`&#124;`, `-`      | Flat Mirror | Atoms are reflected horizontally or vertically, respectively. From the edge, does nothing. |
+|`|`, `-`           | Flat Mirror | Atoms are reflected horizontally or vertically, respectively. From the edge, does nothing. |
 |`[a-z]`            | Unassigned | LIKELY TO BE ASSIGNED. Description |
 |`[0-9]`            | Wormhole | These are teleporters. When the atom hits a teleporter it will be transported to the next teleporter in order. Atoms will retain their mass, energy, and direction upon teleportation. If there is only one teleporter, it will have no effect. The order of teleporters is defined as follows: If two teleporters are in the same row, the order is left to right. Otherwise, the order is top to bottom. If there is no teleporter after the one that was hit, the atom will be teleported to the first one on the grid. |
 |`"`                | Printer | Toggles printing mode. When an atom is in printing mode, it will print every character it encounters until the next `"`. Once printing is done, the atom's mass is set to the number of characters printed. |
