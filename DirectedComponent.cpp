@@ -7,12 +7,11 @@
 //
 
 #include "DirectedComponent.h"
-#include "Component.h"
 
 using namespace fsn;
 
 
-DirectedComponent::DirectedComponent(char type)
+DirectedComponent::DirectedComponent(Token type)
 : Component(type) {}
 
 DirectedComponent::~DirectedComponent() {

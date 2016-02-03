@@ -6,17 +6,17 @@
 //  Copyright (c) 2014 C0deH4cker. All rights reserved.
 //
 
-#ifndef _FSN_FISSION_H_
-#define _FSN_FISSION_H_
+#ifndef FSN_FISSION_H
+#define FSN_FISSION_H
 
 #include <string>
+#include <memory>
 #include "Grid.h"
 
 namespace fsn {
 	class Fission {
 	public:
 		Fission();
-		~Fission();
 		
 		int run(int argc, char* argv[]);
 		bool running() const;
@@ -25,7 +25,7 @@ namespace fsn {
 	private:
 		bool skipShebang;
 		bool trace;
-		Grid* grid;
+		std::unique_ptr<Grid> grid;
 		bool stop;
 		int code;
 		
@@ -36,4 +36,4 @@ namespace fsn {
 }
 
 
-#endif /* _FSN_FISSION_H_ */
+#endif /* FSN_FISSION_H */

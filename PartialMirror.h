@@ -6,15 +6,19 @@
 //  Copyright (c) 2014 C0deH4cker. All rights reserved.
 //
 
-#ifndef _FSN_PARTIALMIRROR_H_
-#define _FSN_PARTIALMIRROR_H_
+#ifndef FSN_PARTIALMIRROR_H
+#define FSN_PARTIALMIRROR_H
 
 #include "Component.h"
+#include "Token.h"
 
 namespace fsn {
+	class Atom;
+	class Grid;
+	
 	class PartialMirror: public virtual Component {
 	public:
-		PartialMirror(char type, Grid& grid);
+		PartialMirror(Token type, Grid& grid);
 		
 		virtual bool onHit(Atom& atom);
 		
@@ -24,4 +28,4 @@ namespace fsn {
 }
 
 
-#endif /* _FSN_PARTIALMIRROR_H_ */
+#endif /* FSN_PARTIALMIRROR_H */

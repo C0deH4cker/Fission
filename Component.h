@@ -6,20 +6,23 @@
 //  Copyright (c) 2014 C0deH4cker. All rights reserved.
 //
 
-#ifndef _FSN_COMPONENT_H_
-#define _FSN_COMPONENT_H_
+#ifndef FSN_COMPONENT_H
+#define FSN_COMPONENT_H
+
+#include <memory>
+#include "Token.h"
+#include "Point.h"
 
 namespace fsn {
-	class Atom;
 	class Grid;
-	class Point;
+	class Atom;
 	
 	/*! Virtual base class for all components */
 	class Component {
 	public:
-		static Component* create(char type, Grid& grid, Point pt);
+		static std::shared_ptr<Component> create(Token type, Grid& grid, Point pt);
 		
-		Component(char type);
+		Component(Token type);
 		virtual ~Component();
 		
 		/*!
@@ -29,12 +32,12 @@ namespace fsn {
 		 */
 		virtual bool onHit(Atom& atom);
 		
-		char getType() const { return type; }
+		Token getType() const { return type; }
 		
 	protected:
-		char type;
+		Token type;
 	};
 }
 
 
-#endif /* _FSN_COMPONENT_H_ */
+#endif /* FSN_COMPONENT_H */

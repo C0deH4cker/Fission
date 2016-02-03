@@ -7,96 +7,108 @@
 //
 
 #include "Component.h"
-#include <cctype>
 #include <iostream>
-#include <cstdlib>
-#include "tokens.h"
-#include "Atom.h"
+#include <cctype>
+#include <cstdint>
 #include "Grid.h"
+#include "Atom.h"
+#include "DirChanger.h"
 #include "Mirror.h"
+#include "PartialMirror.h"
+#include "Storage.h"
+#include "Cloner.h"
 #include "Wedge.h"
-#include "Teleporter.h"
 #include "IOComponent.h"
 #include "Terminator.h"
-#include "DirChanger.h"
-#include "PartialMirror.h"
-#include "Cloner.h"
-#include "Storage.h"
 #include "Jumper.h"
+#include "Skipper.h"
+#include "Teleporter.h"
+
 
 using namespace fsn;
 
 
-Component* Component::create(char type, Grid& grid, Point pt) {
+std::shared_ptr<Component> Component::create(Token type, Grid& grid, Point pt) {
 	switch(type) {
-		case TOK_SPAWNER_UP:
-		case TOK_SPAWNER_LEFT:
-		case TOK_SPAWNER_DOWN:
-		case TOK_SPAWNER_RIGHT:
+		case Token::SPAWNER_UP:
+		case Token::SPAWNER_LEFT:
+		case Token::SPAWNER_DOWN:
+		case Token::SPAWNER_RIGHT:
 			grid.spawn(Atom(pt, DirChanger::getDir(type)));
 			/* FALLTHROUGH */
-		case TOK_DIR_UP:
-		case TOK_DIR_LEFT:
-		case TOK_DIR_DOWN:
-		case TOK_DIR_RIGHT:
-			return new DirChanger(type);
+		case Token::DIR_UP:
+		case Token::DIR_LEFT:
+		case Token::DIR_DOWN:
+		case Token::DIR_RIGHT:
+			return std::make_shared<DirChanger>(type);
 		
-		case TOK_MIRROR_URDL:
-		case TOK_MIRROR_ULDR:
-		case TOK_MIRROR_VERTICAL:
-		case TOK_MIRROR_HORIZONTAL:
-		case TOK_MIRROR_TURN_LEFT:
-		case TOK_MIRROR_TURN_RIGHT:
-		case TOK_MIRROR_RANDOM:
-		case TOK_MIRROR_ENERGY_URDL:
-		case TOK_MIRROR_ENERGY_ULDR:
-			return new Mirror(type);
+		case Token::MIRROR_URDL:
+		case Token::MIRROR_ULDR:
+		case Token::MIRROR_VERTICAL:
+		case Token::MIRROR_HORIZONTAL:
+		case Token::MIRROR_TURN_LEFT:
+		case Token::MIRROR_TURN_RIGHT:
+		case Token::MIRROR_RANDOM:
+		case Token::MIRROR_ENERGY_URDL:
+		case Token::MIRROR_ENERGY_ULDR:
+			return std::make_shared<Mirror>(type);
 		
-		case TOK_PARTIAL_CLONER:
-		case TOK_PARTIAL_SPLITTER:
-			return new PartialMirror(type, grid);
+		case Token::PARTIAL_CLONER:
+		case Token::PARTIAL_SPLITTER:
+			return std::make_shared<PartialMirror>(type, grid);
 		
-		case TOK_STACK:
-			return new Stack(type);
+		case Token::STACK:
+			return std::make_shared<Stack>(type);
 			
-		case TOK_QUEUE:
-			return new Queue(type);
+		case Token::QUEUE:
+			return std::make_shared<Queue>(type);
 		
-		case TOK_CLONER_UP:
-		case TOK_CLONER_LEFT:
-		case TOK_CLONER_DOWN:
-		case TOK_CLONER_RIGHT:
-			return new Cloner(type, grid);
+		case Token::CLONER_UP:
+		case Token::CLONER_LEFT:
+		case Token::CLONER_DOWN:
+		case Token::CLONER_RIGHT:
+			return std::make_shared<Cloner>(type, grid);
 		
-		case TOK_WEDGE_UP:
-		case TOK_WEDGE_LEFT:
-		case TOK_WEDGE_DOWN:
-		case TOK_WEDGE_RIGHT:
-			return new Wedge(type, grid);
+		case Token::WEDGE_UP:
+		case Token::WEDGE_LEFT:
+		case Token::WEDGE_DOWN:
+		case Token::WEDGE_RIGHT:
+			return std::make_shared<Wedge>(type, grid);
 		
-		case TOK_IO_NEWLINE:
-		case TOK_IO_OUTCHAR:
-		case TOK_IO_ENDCHAR:
-		case TOK_IO_INCHAR:
-		case TOK_IO_OUTSTR:
-			return new IOComponent(type);
+		case Token::IO_NEWLINE:
+		case Token::IO_OUTCHAR:
+		case Token::IO_ENDCHAR:
+		case Token::IO_INCHAR:
+		case Token::IO_OUTSTR:
+			return std::make_shared<IOComponent>(type);
 		
-		case TOK_TERMINATOR:
-			return new Terminator(type, grid);
+		case Token::TERMINATOR:
+			return std::make_shared<Terminator>(type, grid);
 		
-		case TOK_JUMP:
-			return new Jumper(type, grid.width, grid.height);
+		case Token::JUMP:
+			return std::make_shared<Jumper>(type, grid.width, grid.height);
 		
-		case '0': case '1': case '2': case '3': case '4':
-		case '5': case '6': case '7': case '8': case '9':
+		case Token::SKIP:
+			return grid.addSkipper(type, pt);
+		
+		case Token::TP_0:
+		case Token::TP_1:
+		case Token::TP_2:
+		case Token::TP_3:
+		case Token::TP_4:
+		case Token::TP_5:
+		case Token::TP_6:
+		case Token::TP_7:
+		case Token::TP_8:
+		case Token::TP_9:
 			return grid.addTeleporter(type, pt);
 		
 		default:
-			return new Component(type);
+			return std::make_shared<Component>(type);
 	}
 }
 
-Component::Component(char type)
+Component::Component(Token type)
 : type(type) {
 	
 }
@@ -109,40 +121,49 @@ bool Component::onHit(Atom& atom) {
 	bool destroy = false;
 	
 	switch(type) {
-		case TOK_DESTROY:
+		case Token::DESTROY:
 			destroy = true;
 			break;
 		
-		case TOK_INCMASS:
+		case Token::INCMASS:
 			++atom.mass;
 			break;
 		
-		case TOK_DECMASS:
+		case Token::DECMASS:
 			--atom.mass;
 			break;
 		
-		case TOK_INCENERGY:
+		case Token::INCENERGY:
 			++atom.energy;
 			break;
 		
-		case TOK_DECENERGY:
+		case Token::DECENERGY:
 			--atom.energy;
 			break;
 		
-		case TOK_SWAP: {
-			int mass = atom.mass;
+		case Token::INVENERGY:
+			atom.energy = -atom.energy;
+			break;
+		
+		case Token::SWAP: {
+			int64_t mass = atom.mass;
 			atom.mass = atom.energy;
 			atom.energy = mass;
 			break;
 		}
 		
-		case TOK_LITERAL:
-			atom.setting = true;
+		case Token::LITERAL:
+			atom.flags |= AtomicFlags::Setting;
+			break;
+		
+		case Token::CLEAR:
+			atom.mass = 1;
+			atom.energy = 0;
 			break;
 		
 		default:
-			if(islower(type)) {
-				atom.mass = type;
+			if(islower((char)type)) {
+				atom.mass = (char)type;
 			}
 			break;
 	}

@@ -6,13 +6,17 @@
 //  Copyright (c) 2014 C0deH4cker. All rights reserved.
 //
 
-#ifndef _FSN_POINT_H_
-#define _FSN_POINT_H_
+#ifndef FSN_POINT_H
+#define FSN_POINT_H
+
+#include <ostream>
 
 namespace fsn {
 	struct Point {
 		int x;
 		int y;
+		
+		size_t hash() const;
 	};
 	
 	bool operator==(const Point& a, const Point& b);
@@ -27,7 +31,20 @@ namespace fsn {
 	bool operator<=(const Point& a, const Point& b);
 	bool operator>(const Point& a, const Point& b);
 	bool operator>=(const Point& a, const Point& b);
+	
+	// Used for printing debug information
+	std::ostream& operator<<(std::ostream& os, Point pt);
+}
+
+// Allow std::hash<Point>
+namespace std {
+	template<>
+	struct hash<fsn::Point> {
+		size_t operator()(fsn::Point pt) {
+			return pt.hash();
+		}
+	};
 }
 
 
-#endif /* _FSN_POINT_H_ */
+#endif /* FSN_POINT_H */

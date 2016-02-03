@@ -6,22 +6,20 @@
 //  Copyright (c) 2014 C0deH4cker. All rights reserved.
 //
 
-#ifndef _FSN_DIRCHANGER_H_
-#define _FSN_DIRCHANGER_H_
+#ifndef FSN_DIRCHANGER_H
+#define FSN_DIRCHANGER_H
 
-#include "Component.h"
-#include "Direction.h"
-#include "Point.h"
 #include "DirectedComponent.h"
+#include "Direction.h"
 
 namespace fsn {
 	class Atom;
 	
 	class DirChanger: public virtual DirectedComponent {
 	public:
-		static Direction getDir(char type);
+		static Direction getDir(Token type);
 		
-		DirChanger(char type);
+		DirChanger(Token type);
 		
 		virtual Direction getDir() const;
 		virtual bool onHit(Atom& atom);
@@ -29,4 +27,4 @@ namespace fsn {
 }
 
 
-#endif /* _FSN_DIRCHANGER_H_ */
+#endif /* FSN_DIRCHANGER_H */

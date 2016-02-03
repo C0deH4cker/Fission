@@ -6,18 +6,20 @@
 //  Copyright (c) 2014 C0deH4cker. All rights reserved.
 //
 
-#ifndef _FSN_TELEPORTER_H_
-#define _FSN_TELEPORTER_H_
+#ifndef FSN_TELEPORTER_H
+#define FSN_TELEPORTER_H
 
 #include "Component.h"
 
 namespace fsn {
-	class Atom;
 	class Grid;
+	class Atom;
 	
 	class Teleporter: public virtual Component {
 	public:
-		Teleporter(char type, Grid& grid, int index);
+		Teleporter(Token type, Grid& grid, int index);
+		
+		static int getChannel(Token type);
 		
 		virtual bool onHit(Atom& atom);
 	
@@ -28,4 +30,4 @@ namespace fsn {
 }
 
 
-#endif /* _FSN_TELEPORTER_H_ */
+#endif /* FSN_TELEPORTER_H */

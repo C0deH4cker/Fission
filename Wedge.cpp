@@ -7,39 +7,40 @@
 //
 
 #include "Wedge.h"
-#include "macros.h"
-#include "tokens.h"
-#include "Atom.h"
-#include "Component.h"
-#include "Direction.h"
+#include <cstdint>
+#include "common.h"
 #include "Grid.h"
 
 using namespace fsn;
 
 
-Wedge::Wedge(char type, Grid& grid)
-: Component(type), DirectedComponent(type), grid(grid),
-divisor(2), minusEnergy(0) {}
+Wedge::Wedge(Token type, Grid& grid)
+: Component(type), DirectedComponent(type), grid(grid), saved{2, 0} {}
 
 Direction Wedge::getDir() const {
 	switch(type) {
-		case TOK_WEDGE_UP:    return UP;
-		case TOK_WEDGE_LEFT:  return LEFT;
-		case TOK_WEDGE_DOWN:  return DOWN;
-		case TOK_WEDGE_RIGHT: return RIGHT;
+		case Token::WEDGE_UP:    return UP;
+		case Token::WEDGE_LEFT:  return LEFT;
+		case Token::WEDGE_DOWN:  return DOWN;
+		case Token::WEDGE_RIGHT: return RIGHT;
 		
 		default:
-			fatal("Cell '%c' is not a Wedge.", type);
+			fatal("Cell '%c' is not a Wedge.", (char)type);
 	}
 }
 
 bool Wedge::onHit(Atom& atom) {
 	Direction dir(getDir());
-	
+
 	if(atom.dir == dir) {
 		// Hit the inside of the fork, so consume the atom
-		divisor = atom.mass;
-		minusEnergy = atom.energy;
+		saved = atom;
+		
+		// Store 1 instead of 0 to prevent div by zero
+		if(saved.mass == 0) {
+			++saved.mass;
+		}
+		
 		return true;
 	}
 	
@@ -48,21 +49,21 @@ bool Wedge::onHit(Atom& atom) {
 		//
 		// WARNING: DO NOT TRY THIS AT HOME. SPLITTING ATOMS IS ONLY TO BE DONE
 		// BY TRAINED PROFESSIONALS. BY USING THE PRODUCT YOU ACKNOWLEDGE THAT
-		// THERE IS NO WARRANTY, EXPRESS OR IMPLIED,	 AND THAT C0DEH4CKER IS NOT
+		// THERE IS NO WARRANTY, EXPRESS OR IMPLIED, AND THAT THE AUTHOR IS NOT
 		// LIABLE FOR ANY INJURIES, DECAPITATIONS, OR SPONTANEOUS COMBUSTIONS
 		// THAT MAY RESULT FROM YOUR USE OF THE PRODUCT. IF THE WORLD AND/OR
 		// UNIVERSE COME TO A FIERY END AS A RESULT OF SPLITTING ATOMS WITH
-		// THE PRODUCT, C0DEH4CKER IS NOT TO BE HELD RESPONSIBLE IN ANY WAY.
+		// THE PRODUCT, THE AUTHOR IS NOT TO BE HELD RESPONSIBLE IN ANY WAY.
 		//
 		// Have fun!
-		int left = atom.mass / divisor;
+		int64_t left = atom.mass / saved.mass;
 		atom.mass -= left;
-		atom.energy -= minusEnergy;
+		atom.energy -= saved.energy;
 		atom.dir = (dir + 1) & 3;
 		
 		Atom split(atom);
 		split.mass = left;
-		split.dir = (dir + 3) & 3;
+		split.dir = atom.dir ^ 2;
 		
 		grid.spawn(split);
 	}

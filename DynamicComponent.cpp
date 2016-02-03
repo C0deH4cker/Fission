@@ -11,7 +11,7 @@
 using namespace fsn;
 
 
-DynamicComponent::DynamicComponent(char type, Grid& grid)
+DynamicComponent::DynamicComponent(Token type, Grid& grid)
 : Component(type), grid(grid) {}
 
 DynamicComponent::~DynamicComponent() {}

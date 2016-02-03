@@ -7,43 +7,49 @@
 //
 
 #include "Mirror.h"
-#include <cstdlib>
-#include "macros.h"
-#include "tokens.h"
+#include <random>
+#include <chrono>
+#include "common.h"
 #include "Atom.h"
-#include "Direction.h"
 
 using namespace fsn;
 
 
-Mirror::Mirror(char type)
+Mirror::Mirror(Token type)
 : Component(type) {}
 
+static unsigned long long get_time() {
+	return std::chrono::steady_clock::now().time_since_epoch().count();
+}
+
 bool Mirror::onHit(Atom& atom) {
+	static std::mt19937 prng((unsigned)get_time());
+	static std::uniform_int_distribution<> random_dir(3, 5);
+	
 	bool destroy = false;
 	
 	switch(type) {
-		case TOK_MIRROR_URDL:
+		case Token::MIRROR_URDL:
 			// 00:11, 01:10, 10:01, 11:00
 			atom.dir ^= 3;
 			break;
 		
-		case TOK_MIRROR_ULDR:
+		case Token::MIRROR_ULDR:
 			// 00:01, 01:00, 10:11, 11:10
 			atom.dir ^= 1;
 			break;
 		
-		case TOK_MIRROR_VERTICAL:
+		case Token::MIRROR_VERTICAL:
 			// 00:00, 01:11, 10:10, 11:01
 			atom.dir ^= (atom.dir & 1) << 1;
 			break;
 		
-		case TOK_MIRROR_HORIZONTAL:
+		case Token::MIRROR_HORIZONTAL:
 			// 00:10, 01:01, 10:00, 11:11
 			atom.dir ^= (atom.dir & ~1) << 1;
 			break;
 		
-		case TOK_MIRROR_TURN_LEFT:
+		case Token::MIRROR_TURN_LEFT:
 			if(atom.energy >= 1) {
 				--atom.energy;
 			}
@@ -52,7 +58,7 @@ bool Mirror::onHit(Atom& atom) {
 			}
 			break;
 		
-		case TOK_MIRROR_TURN_RIGHT:
+		case Token::MIRROR_TURN_RIGHT:
 			if(atom.energy >= 1) {
 				--atom.energy;
 			}
@@ -61,11 +67,11 @@ bool Mirror::onHit(Atom& atom) {
 			}
 			break;
 		
-		case TOK_MIRROR_RANDOM:
-			atom.dir = (atom.dir + arc4random() % 3 + 3) & 3;
+		case Token::MIRROR_RANDOM:
+			atom.dir = (atom.dir + random_dir(prng)) & 3;
 			break;
 		
-		case TOK_MIRROR_ENERGY_URDL:
+		case Token::MIRROR_ENERGY_URDL:
 			if(atom.energy >= 1) {
 				--atom.energy;
 				atom.dir ^= 1;
@@ -75,7 +81,7 @@ bool Mirror::onHit(Atom& atom) {
 			}
 			break;
 		
-		case TOK_MIRROR_ENERGY_ULDR:
+		case Token::MIRROR_ENERGY_ULDR:
 			if(atom.energy >= 1) {
 				--atom.energy;
 				atom.dir ^= 3;
@@ -86,7 +92,7 @@ bool Mirror::onHit(Atom& atom) {
 			break;
 		
 		default:
-			fatal("Cell '%c' is not a Mirror.", type);
+			fatal("Cell '%c' is not a Mirror.", (char)type);
 	}
 	
 	return destroy;

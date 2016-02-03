@@ -14,12 +14,12 @@
 using namespace fsn;
 
 
-Terminator::Terminator(char type, Grid& grid)
+Terminator::Terminator(Token type, Grid& grid)
 : Component(type), grid(grid) {}
 
 bool Terminator::onHit(Atom& atom) {
 	// I'll be back
-	grid.terminate(atom.mass);
+	grid.terminate((int)atom.mass);
 	return true;
 }
 

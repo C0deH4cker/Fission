@@ -8,13 +8,12 @@
 
 #include "Jumper.h"
 #include "Component.h"
-#include "Grid.h"
 #include "Atom.h"
 
 using namespace fsn;
 
 
-Jumper::Jumper(char type, int width, int height)
+Jumper::Jumper(Token type, int width, int height)
 : Component(type), width(width), height(height) {}
 
 

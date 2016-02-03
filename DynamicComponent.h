@@ -6,8 +6,8 @@
 //  Copyright (c) 2014 C0deH4cker. All rights reserved.
 //
 
-#ifndef _FSN_DYNAMICCOMPONENT_H_
-#define _FSN_DYNAMICCOMPONENT_H_
+#ifndef FSN_DYNAMICCOMPONENT_H
+#define FSN_DYNAMICCOMPONENT_H
 
 #include "Component.h"
 
@@ -17,14 +17,13 @@ namespace fsn {
 	
 	class DynamicComponent: public virtual Component {
 	public:
-		DynamicComponent(char type, Grid& grid);
+		DynamicComponent(Token type, Grid& grid);
 		virtual ~DynamicComponent();
 		
 		virtual bool onHit(Atom& atom)=0;
 		
 		/*!
 		 Called once per tick to perform logic updates.
-		 @param grid Reference to the grid object to change global state.
 		 @return True if this component should stop ticking, false otherwise.
 		 */
 		virtual bool onTick()=0;
@@ -35,4 +34,4 @@ namespace fsn {
 }
 
 
-#endif /* _FSN_DYNAMICCOMPONENT_H_ */
+#endif /* FSN_DYNAMICCOMPONENT_H */

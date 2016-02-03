@@ -12,33 +12,30 @@
 #include <fstream>
 #include <string>
 #include <functional>
+#include "Grid.h"
 
 using namespace fsn;
 
 
 Fission::Fission()
-: code(0), stop(false) {}
-
-Fission::~Fission() {
-	delete grid;
-}
+: trace(false), code(0), stop(false) {}
 
 int Fission::run(int argc, char* argv[]) {
 	std::ifstream src;
 	bool skipShebang = false;
 	std::unordered_map<std::string, std::function<int()>> options;
 	
-	options["-s"] = options["--script"] = [&]() {
+	options["-s"] = options["--script"] = [&] {
 		skipShebang = true;
 		return 0;
 	};
 	
-	options["-t"] = options["--trace"] = [&]() {
+	options["-t"] = options["--trace"] = [&] {
 		trace = true;
 		return 0;
 	};
 	
-	options["-h"] = options["--help"] = options["--usage"] = [&]() {
+	options["-h"] = options["--help"] = options["--usage"] = [&] {
 		return usage(argv[0]);
 	};
 	
@@ -76,7 +73,7 @@ int Fission::run(int argc, char* argv[]) {
 		return usage(argv[0]);
 	}
 	
-	grid = new Grid(src, skipShebang);
+	grid.reset(new Grid(src, skipShebang));
 	
 	return mainloop();
 }
@@ -87,10 +84,7 @@ bool Fission::running() const {
 
 void Fission::terminate(int status) {
 	stop = true;
-	
-	if(status > code) {
-		code = status;
-	}
+	code = status;
 }
 
 int Fission::mainloop() {

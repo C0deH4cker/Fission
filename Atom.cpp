@@ -7,38 +7,100 @@
 //
 
 #include "Atom.h"
-#include "Direction.h"
+#include <sstream>
 
 using namespace fsn;
 
+unsigned Atom::lastid = 0;
+
+AtomicData& AtomicData::operator+=(const AtomicData& other) {
+	mass += other.mass;
+	energy += other.energy;
+	return *this;
+}
+
+AtomicData& AtomicData::operator-=(const AtomicData& other) {
+	mass -= other.mass;
+	energy -= other.energy;
+	return *this;
+}
+
+AtomicData& AtomicData::operator*=(const AtomicData& other) {
+	mass *= other.mass;
+	energy *= other.energy;
+	return *this;
+}
+
+AtomicData& AtomicData::operator/=(const AtomicData& other) {
+	mass /= other.mass;
+	energy /= other.energy;
+	return *this;
+}
+
+AtomicData fsn::operator+(const AtomicData& a, const AtomicData& b) {
+	AtomicData ret {
+		a.mass + b.mass,
+		a.energy + b.energy
+	};
+	return ret;
+}
+
+AtomicData fsn::operator-(const AtomicData& a, const AtomicData& b) {
+	AtomicData ret {
+		a.mass - b.mass,
+		a.energy - b.energy
+	};
+	return ret;
+}
+
+AtomicData fsn::operator*(const AtomicData& a, const AtomicData& b) {
+	AtomicData ret {
+		a.mass * b.mass,
+		a.energy * b.energy
+	};
+	return ret;
+}
+
+AtomicData fsn::operator/(const AtomicData& a, const AtomicData& b) {
+	AtomicData ret {
+		a.mass / b.mass,
+		a.energy / b.energy
+	};
+	return ret;
+}
 
 Atom::Atom(const Point& startingPos, Direction startingDir)
-: pos(startingPos), dir(startingDir), mass(1), energy(0),
-printing(false), setting(false) {}
+: AtomicData{1, 0}, pos(startingPos), dir(startingDir),
+flags(AtomicFlags::None), id(0) {}
 
 Atom::Atom(const Atom& other)
-: pos(other.pos), dir(other.dir), mass(other.mass), energy(other.energy),
-printing(other.printing), setting(other.setting) {}
+: AtomicData{other.mass, other.energy}, pos(other.pos), dir(other.dir),
+flags(other.flags), id(other.id) {}
 
 Atom& Atom::operator=(const Atom& other) {
 	pos = other.pos;
 	dir = other.dir;
 	mass = other.mass;
 	energy = other.energy;
-	printing = other.printing;
-	setting = other.setting;
+	flags = other.flags;
+	id = other.id;
 	return *this;
 }
 
+Atom Atom::activate() const {
+	Atom copy = *this;
+	copy.id = ++Atom::lastid;
+	return copy;
+}
 
-Atom Atom::move(int w, int h, int steps) const {
+Atom Atom::move(int w, int h, int64_t steps) const {
 	Atom ret(*this);
 	
 	if(steps < 0) {
 		ret.dir ^= 2;
 	}
 	
-	int d = steps * ((dir & 2) - 1);
+	int64_t d = steps * ((dir & 2) - 1);
 	
 	if(dir & 1) {
 		ret.pos.x = ((pos.x + d) % w + w) % w;
@@ -50,12 +112,15 @@ Atom Atom::move(int w, int h, int steps) const {
 	return ret;
 }
 
+void Atom::show(std::ostream& os, char hit) const {
+	std::stringstream ss;
+	ss << "Atom " << id << " at " << pos << " with mass " << mass << " and energy " << energy
+	   << " hit component '" << hit << "'" << std::endl;
+	os << ss.str();
+}
+
 bool fsn::operator==(const Atom& a, const Atom& b) {
-	return a.pos == b.pos &&
-	       a.dir == b.dir &&
-	       a.mass == b.mass &&
-	       a.energy == b.energy &&
-	       a.printing == b.printing;
+	return a.id == b.id;
 }
 
 bool fsn::operator!=(const Atom& a, const Atom& b) {
@@ -88,5 +153,62 @@ bool fsn::operator<(const Atom& a, const Atom& b) {
 
 bool fsn::operator<=(const Atom& a, const Atom& b) {
 	return !(a > b);
+}
+
+
+Atom fsn::operator+(const Atom& a, const AtomicData& b) {
+	Atom ret(a);
+	ret.mass += b.mass;
+	ret.energy += b.energy;
+	return ret;
+}
+
+Atom fsn::operator+(const AtomicData& a, const Atom& b) {
+	Atom ret(b);
+	ret.mass += a.mass;
+	ret.energy += a.energy;
+	return ret;
+}
+
+Atom fsn::operator-(const Atom& a, const AtomicData& b) {
+	Atom ret(a);
+	ret.mass -= b.mass;
+	ret.energy -= b.energy;
+	return ret;
+}
+
+Atom fsn::operator-(const AtomicData& a, const Atom& b) {
+	Atom ret(b);
+	ret.mass -= a.mass;
+	ret.energy -= a.energy;
+	return ret;
+}
+
+Atom fsn::operator*(const Atom& a, const AtomicData& b) {
+	Atom ret(a);
+	ret.mass *= b.mass;
+	ret.energy *= b.energy;
+	return ret;
+}
+
+Atom fsn::operator*(const AtomicData& a, const Atom& b) {
+	Atom ret(b);
+	ret.mass *= a.mass;
+	ret.energy *= a.energy;
+	return ret;
+}
+
+Atom fsn::operator/(const Atom& a, const AtomicData& b) {
+	Atom ret(a);
+	ret.mass /= b.mass;
+	ret.energy /= b.energy;
+	return ret;
+}
+
+Atom fsn::operator/(const AtomicData& a, const Atom& b) {
+	Atom ret(b);
+	ret.mass /= a.mass;
+	ret.energy /= a.energy;
+	return ret;
 }
 

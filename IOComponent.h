@@ -6,8 +6,8 @@
 //  Copyright (c) 2014 C0deH4cker. All rights reserved.
 //
 
-#ifndef _FSN_IOCOMPONENT_H_
-#define _FSN_IOCOMPONENT_H_
+#ifndef FSN_IOCOMPONENT_H
+#define FSN_IOCOMPONENT_H
 
 #include "Component.h"
 
@@ -16,7 +16,7 @@ namespace fsn {
 	
 	class IOComponent: public virtual Component {
 	public:
-		IOComponent(char type);
+		IOComponent(Token type);
 		
 		virtual bool onHit(Atom& atom);
 		
@@ -26,4 +26,4 @@ namespace fsn {
 }
 
 
-#endif /* _FSN_IOCOMPONENT_H_ */
+#endif /* FSN_IOCOMPONENT_H */

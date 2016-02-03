@@ -6,8 +6,8 @@
 //  Copyright (c) 2014 C0deH4cker. All rights reserved.
 //
 
-#ifndef _FSN_DIRECTEDCOMPONENT_H_
-#define _FSN_DIRECTEDCOMPONENT_H_
+#ifndef FSN_DIRECTEDCOMPONENT_H
+#define FSN_DIRECTEDCOMPONENT_H
 
 #include "Component.h"
 #include "Direction.h"
@@ -15,7 +15,7 @@
 namespace fsn {
 	class DirectedComponent: public virtual Component {
 	public:
-		DirectedComponent(char type);
+		DirectedComponent(Token type);
 		virtual ~DirectedComponent();
 		
 		virtual Direction getDir() const=0;
@@ -23,4 +23,4 @@ namespace fsn {
 }
 
 
-#endif /* _FSN_DIRECTEDCOMPONENT_H_ */
+#endif /* FSN_DIRECTEDCOMPONENT_H */

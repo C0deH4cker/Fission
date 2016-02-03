@@ -8,43 +8,40 @@
 
 #include "IOComponent.h"
 #include <iostream>
-#include "macros.h"
-#include "tokens.h"
+#include "common.h"
 #include "Atom.h"
 
 using namespace fsn;
 
 
-IOComponent::IOComponent(char type)
-: Component(type), pastEOF(false) {
-	
-}
+IOComponent::IOComponent(Token type)
+: Component(type), pastEOF(false) {}
 
 bool IOComponent::onHit(Atom& atom) {
-	char c;
+	char c = '\0';
 	bool destroy = false;
 	
 	switch(type) {
-		case TOK_IO_NEWLINE:
+		case Token::IO_NEWLINE:
 			std::cout.put('\n');
 			break;
 		
-		case TOK_IO_OUTCHAR:
+		case Token::IO_OUTCHAR:
 			std::cout.put((char)atom.mass);
 			break;
 			
-		case TOK_IO_ENDCHAR:
+		case Token::IO_ENDCHAR:
 			std::cout.put((char)atom.mass);
 			destroy = true;
 			break;
 		
-		case TOK_IO_INCHAR:
+		case Token::IO_INCHAR:
 			if(pastEOF) {
 				return true;
 			}
 			
 			if(std::cin.get(c)) {
-				atom.mass = (int)(unsigned char)c;
+				atom.mass = (int64_t)(unsigned char)c;
 				atom.energy = 0;
 			}
 			else {
@@ -53,19 +50,16 @@ bool IOComponent::onHit(Atom& atom) {
 			}
 			break;
 		
-		case TOK_IO_OUTSTR:
-			if(atom.printing) {
-				atom.printing = false;
-			}
-			else {
-				atom.printing = true;
+		case Token::IO_OUTSTR:
+			if((atom.flags & AtomicFlags::Printing) == AtomicFlags::None) {
 				atom.mass = 0;
 			}
+			atom.flags ^= AtomicFlags::Printing;
 			break;
 		
 		
 		default:
-			fatal("Cell '%c' is not an IOComponent.", type);
+			fatal("Cell '%c' is not an IOComponent.", (char)type);
 	}
 	
 	return destroy;

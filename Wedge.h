@@ -6,29 +6,28 @@
 //  Copyright (c) 2014 C0deH4cker. All rights reserved.
 //
 
-#ifndef _FSN_WEDGE_H_
-#define _FSN_WEDGE_H_
+#ifndef FSN_WEDGE_H
+#define FSN_WEDGE_H
 
-#include "Component.h"
 #include "DirectedComponent.h"
-#include "Grid.h"
+#include "Direction.h"
+#include "Atom.h"
 
 namespace fsn {
-	class Atom;
+	class Grid;
 	
 	class Wedge: public virtual DirectedComponent {
 	public:
-		Wedge(char type, Grid& grid);
+		Wedge(Token type, Grid& grid);
 		
 		virtual bool onHit(Atom& atom);
 		virtual Direction getDir() const;
 		
 	private:
 		Grid& grid;
-		int divisor;
-		int minusEnergy;
+		AtomicData saved;
 	};
 }
 
 
-#endif /* _FSN_WEDGE_H_ */
+#endif /* FSN_WEDGE_H */

@@ -6,8 +6,8 @@
 //  Copyright (c) 2014 C0deH4cker. All rights reserved.
 //
 
-#ifndef _FSN_DIRECTION_H_
-#define _FSN_DIRECTION_H_
+#ifndef FSN_DIRECTION_H
+#define FSN_DIRECTION_H
 
 /*! Represents a simple direction, either up, down, left, or right */
 typedef unsigned char Direction;
@@ -20,4 +20,4 @@ typedef unsigned char Direction;
 #define UNKNOWN 0xff
 
 
-#endif /* _FSN_DIRECTION_H_ */
+#endif /* FSN_DIRECTION_H */

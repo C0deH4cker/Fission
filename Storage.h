@@ -6,34 +6,40 @@
 //  Copyright (c) 2014 C0deH4cker. All rights reserved.
 //
 
-#ifndef _FSN_STORAGE_H_
-#define _FSN_STORAGE_H_
+#ifndef FSN_STORAGE_H
+#define FSN_STORAGE_H
 
 #include "Component.h"
 #include <stack>
 #include <queue>
-#include "macros.h"
-#include "Grid.h"
+#include <cstdint>
 #include "Atom.h"
 
 namespace fsn {
-	struct StoredData {
-		int mass;
-		int energy;
-	};
-	
 	template <class T>
 	class Storage: public virtual Component {
 	public:
-		static const StoredData& getTop(std::stack<StoredData> stack) {
-			return stack.top();
+		static void push(std::stack<int64_t>& stack, int64_t value) {
+			stack.push(value);
 		}
 		
-		static const StoredData& getTop(std::queue<StoredData> queue) {
-			return queue.front();
+		static void push(std::queue<int64_t>& queue, int64_t value) {
+			queue.push(value);
 		}
 		
-		Storage(char type)
+		static int64_t pop(std::stack<int64_t>& stack) {
+			int64_t ret = stack.top();
+			stack.pop();
+			return ret;
+		}
+		
+		static int64_t pop(std::queue<int64_t>& queue) {
+			int64_t ret = queue.front();
+			queue.pop();
+			return ret;
+		}
+		
+		Storage(Token type)
 		: Component(type) {}
 		
 		virtual bool onHit(Atom& atom) {
@@ -41,7 +47,7 @@ namespace fsn {
 			
 			if(atom.energy >= 0) {
 				// Push
-				stored.push({atom.mass, atom.energy});
+				push(stored, atom.mass);
 				destroy = true;
 			}
 			else if(stored.empty()) {
@@ -51,10 +57,8 @@ namespace fsn {
 			}
 			else {
 				// Pop
-				const StoredData& top = getTop(stored);
-				atom.mass = top.mass;
-				atom.energy = top.energy;
-				stored.pop();
+				atom.mass = pop(stored);
+				atom.energy = ~atom.energy;
 			}
 			
 			return destroy;
@@ -64,9 +68,9 @@ namespace fsn {
 		T stored;
 	};
 	
-	typedef Storage<std::stack<StoredData>> Stack;
-	typedef Storage<std::queue<StoredData>> Queue;
+	using Stack = Storage<std::stack<int64_t>>;
+	using Queue = Storage<std::queue<int64_t>>;
 }
 
 
-#endif /* _FSN_STACK_H_ */
+#endif /* FSN_STACK_H */

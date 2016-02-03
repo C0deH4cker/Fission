@@ -7,29 +7,26 @@
 //
 
 #include "DirChanger.h"
-#include "macros.h"
-#include "tokens.h"
-#include "DirectedComponent.h"
+#include "common.h"
 #include "Component.h"
 #include "Atom.h"
-#include "Direction.h"
 
 using namespace fsn;
 
 
-Direction DirChanger::getDir(char type) {
+Direction DirChanger::getDir(Token type) {
 	switch(type) {
-		case TOK_SPAWNER_UP:    case TOK_DIR_UP:	    return UP;
-		case TOK_SPAWNER_LEFT:  case TOK_DIR_LEFT:  return LEFT;
-		case TOK_SPAWNER_DOWN:  case TOK_DIR_DOWN:  return DOWN;
-		case TOK_SPAWNER_RIGHT: case TOK_DIR_RIGHT: return RIGHT;
+		case Token::SPAWNER_UP:    case Token::DIR_UP:    return UP;
+		case Token::SPAWNER_LEFT:  case Token::DIR_LEFT:  return LEFT;
+		case Token::SPAWNER_DOWN:  case Token::DIR_DOWN:  return DOWN;
+		case Token::SPAWNER_RIGHT: case Token::DIR_RIGHT: return RIGHT;
 			
 		default:
-			fatal("Cell '%c' is not a DirChanger.", type);
+			fatal("Cell '%c' is not a DirChanger.", (char)type);
 	}
 }
 
-DirChanger::DirChanger(char type)
+DirChanger::DirChanger(Token type)
 : Component(type), DirectedComponent(type) {}
 
 Direction DirChanger::getDir() const {

@@ -6,31 +6,31 @@
 //  Copyright (c) 2014 C0deH4cker. All rights reserved.
 //
 
-#ifndef _FSN_CLONER_H_
-#define _FSN_CLONER_H_
+#ifndef FSN_CLONER_H
+#define FSN_CLONER_H
 
-#include "Component.h"
+#include <cstdint>
 #include "DirectedComponent.h"
 #include "Direction.h"
+#include "Atom.h"
 
 namespace fsn {
 	class Grid;
 	
 	class Cloner: public virtual DirectedComponent {
 	public:
-		Cloner(char type, Grid& grid);
+		Cloner(Token type, Grid& grid);
 		
 		virtual bool onHit(Atom& atom);
 		virtual Direction getDir() const;
 		
 	private:
 		Grid& grid;
-		int multiplier;
-		int storedMass;
-		int storedEnergy;
+		int64_t multiplier, adder;
+		AtomicData waiting;
 		Direction stored;
 	};
 }
 
 
-#endif /* _FSN_CLONER_H_ */
+#endif /* FSN_CLONER_H */

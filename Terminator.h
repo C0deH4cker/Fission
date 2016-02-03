@@ -6,18 +6,18 @@
 //  Copyright (c) 2014 C0deH4cker. All rights reserved.
 //
 
-#ifndef _FSN_TERMINATOR_H_
-#define _FSN_TERMINATOR_H_
+#ifndef FSN_TERMINATOR_H
+#define FSN_TERMINATOR_H
 
 #include "Component.h"
-#include "Grid.h"
 
 namespace fsn {
 	class Atom;
+	class Grid;
 	
 	class Terminator: public virtual Component {
 	public:
-		Terminator(char type, Grid& grid);
+		Terminator(Token type, Grid& grid);
 		
 		virtual bool onHit(Atom& atom);
 		
@@ -27,4 +27,4 @@ namespace fsn {
 }
 
 
-#endif /* _FSN_TERMINATOR_H_ */
+#endif /* FSN_TERMINATOR_H */

@@ -6,8 +6,8 @@
 //  Copyright (c) 2014 C0deH4cker. All rights reserved.
 //
 
-#ifndef _FSN_JUMPER_H_
-#define _FSN_JUMPER_H_
+#ifndef FSN_JUMPER_H
+#define FSN_JUMPER_H
 
 #include "Component.h"
 
@@ -16,7 +16,7 @@ namespace fsn {
 	
 	class Jumper: public virtual Component {
 	public:
-		Jumper(char type, int width, int height);
+		Jumper(Token type, int width, int height);
 		
 		virtual bool onHit(Atom& atom);
 		
@@ -26,4 +26,4 @@ namespace fsn {
 }
 
 
-#endif /* _FSN_JUMPER_H_ */
+#endif /* FSN_JUMPER_H */

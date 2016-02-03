@@ -7,22 +7,21 @@
 //
 
 #include "PartialMirror.h"
-#include "macros.h"
-#include "tokens.h"
-#include "Component.h"
-#include "Grid.h"
+#include <cstdint>
+#include "common.h"
 #include "Atom.h"
+#include "Grid.h"
 
 using namespace fsn;
 
 
-PartialMirror::PartialMirror(char type, Grid& grid)
+PartialMirror::PartialMirror(Token type, Grid& grid)
 : Component(type), grid(grid) {}
 
 bool PartialMirror::onHit(Atom& atom) {
 	switch(type) {
-		case TOK_PARTIAL_SPLITTER: {
-			int smaller = atom.mass >> 1;
+		case Token::PARTIAL_SPLITTER: {
+			int64_t smaller = atom.mass >> 1;
 			atom.mass -= smaller;
 			
 			Atom reflected(atom);
@@ -33,7 +32,7 @@ bool PartialMirror::onHit(Atom& atom) {
 			break;
 		}
 		
-		case TOK_PARTIAL_CLONER: {
+		case Token::PARTIAL_CLONER: {
 			Atom reflected(atom);
 			reflected.dir ^= 2;
 			
@@ -42,7 +41,7 @@ bool PartialMirror::onHit(Atom& atom) {
 		}
 		
 		default:
-			fatal("Cell '%c' is not a PartialMirror.", type);
+			fatal("Cell '%c' is not a PartialMirror.", (char)type);
 	}
 	
 	return false;
