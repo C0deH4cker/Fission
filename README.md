@@ -1,4 +1,4 @@
-#Fission#
+# Fission
 
 The programming language that defies the laws of conservation of mass and energy.
 
@@ -8,7 +8,7 @@ represented as 64-bit signed integers. When an atom is first created, it has a m
 down, left or right. It can change direction through various means such as bouncing off of mirrors. The dimensions of the Fission universe are limited
 only by available system memory.
 
-##Atom lifetime##
+## Atom lifetime
 
 Atoms will continue moving around until a component destroys it. All atoms move once per tick, simultaneously. Multiple atoms can share the same
 position. When they hit the edge of the grid, they are wrapped around to the other side. Due to a recent discovery in quantum physics, atoms can
@@ -16,7 +16,7 @@ now have negative masses! When there are no more atoms left on the grid, the pro
 atom with nonzero mass).
 
 
-##Components##
+## Components
 
 |     Component     |           Name           | Description      |
 |-------------------|--------------------------|------------------|
@@ -49,7 +49,7 @@ atom with nonzero mass).
 |`'`                | Setter | The atom's mass will be set to the ASCII value of the next character it hits, and that component will not be evaluated. |
 |`J`                | Jumper | Causes any atom that hits this to instantly jump forward a certain number of cells, depending on its energy. An atom that has 1 energy will jump forward over 1 component after this one, if it has 0 energy, it will jump to the next element, and if it has negative energy it will jump backwards. The atom's energy is spent by jumping, so it will be 0 when it lands. |
 |`N`                | Endline | Prints a newline character. |
-|`C`                | Cleanser | Clears the atom (set the atom's mass and energy both to 0). |
+|`C`                | Cleanser | Clears the atom to its initial state (set the atom's mass to 1 and energy to 0). |
 |`I`                | Inverter | Inverts the atom's energy (multiplies it by -1). |
 |`` ` ``            | Skipper | Skips over all components until the matching `` ` ``. This happens instantly (like with teleporters or `J`). |
 |`G`                | Goto | NOT YET IMPLEMENTED, and LIKELY TO CHANGE. Go to the position (`mass % width`, `mass / width`). The atom's mass will be set to `x + y * width`, where x and y are the coordinates of this component. |
@@ -63,7 +63,7 @@ All other characters are currently ignored, and atoms will pass through them wit
 
 
 
-##Examples##
+## Examples
 
 Simplest hello world (almost looks like a normal language):
 
