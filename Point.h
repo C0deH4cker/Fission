@@ -40,7 +40,7 @@ namespace fsn {
 namespace std {
 	template<>
 	struct hash<fsn::Point> {
-		size_t operator()(fsn::Point pt) {
+		size_t operator()(fsn::Point pt) const {
 			return pt.hash();
 		}
 	};

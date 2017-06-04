@@ -16,6 +16,7 @@
 #include <unordered_set>
 #include <sstream>
 #include <unistd.h>
+#include <limits.h>
 #include "Component.h"
 #include "DynamicComponent.h"
 #include "Fission.h"
