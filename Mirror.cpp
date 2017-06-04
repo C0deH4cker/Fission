@@ -7,11 +7,11 @@
 //
 
 #include "Mirror.h"
-#include <cstdlib>
+#include <random>
+#include <chrono>
 #include "macros.h"
 #include "tokens.h"
 #include "Atom.h"
-#include "Direction.h"
 
 using namespace fsn;
 
@@ -19,7 +19,14 @@ using namespace fsn;
 Mirror::Mirror(char type)
 : Component(type) {}
 
+static unsigned long long get_time() {
+	return std::chrono::steady_clock::now().time_since_epoch().count();
+}
+
 bool Mirror::onHit(Atom& atom) {
+	static std::mt19937 prng((unsigned)get_time());
+	static std::uniform_int_distribution<> random_dir(3, 5);
+	
 	bool destroy = false;
 	
 	switch(type) {
@@ -62,7 +69,7 @@ bool Mirror::onHit(Atom& atom) {
 			break;
 		
 		case TOK_MIRROR_RANDOM:
-			atom.dir = (atom.dir + arc4random() % 3 + 3) & 3;
+			atom.dir = (atom.dir + random_dir(prng)) & 3;
 			break;
 		
 		case TOK_MIRROR_ENERGY_URDL:
