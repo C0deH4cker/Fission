@@ -9,10 +9,11 @@
 #ifndef _FSN_COMPONENT_H_
 #define _FSN_COMPONENT_H_
 
+#include "Point.h"
+
 namespace fsn {
 	class Atom;
 	class Grid;
-	class Point;
 	
 	/*! Virtual base class for all components */
 	class Component {

@@ -29,7 +29,7 @@ using namespace fsn;
 
 
 Grid::Grid(std::istream& src, bool skipShebang)
-: status(0), stop(false), width(0), height(0), indices{0} {
+: width(0), height(0), indices{0}, stop(false), status(0) {
 	std::vector<std::string> prog;
 	std::string line;
 	
@@ -40,7 +40,12 @@ Grid::Grid(std::istream& src, bool skipShebang)
 	
 	// Read in every line, keeping track of the longest one
 	while(std::getline(src, line)) {
-		if(line.size() > width) {
+		if(line.size() > INT_MAX) {
+			// Just skip it
+			continue;
+		}
+		
+		if(width < (int)line.size()) {
 			width = (int)line.size();
 		}
 		
@@ -57,7 +62,7 @@ Grid::Grid(std::istream& src, bool skipShebang)
 		
 		for(int j = 0; j < width; j++) {
 			Component* comp;
-			if(j >= prog[i].size()) {
+			if(j >= (int)prog[i].size()) {
 				// Default to ' ' if after EOL
 				comp = new Component(' ');
 			}
@@ -73,8 +78,8 @@ Grid::Grid(std::istream& src, bool skipShebang)
 }
 
 Grid::~Grid() {
-	for(int i = 0; i < cells.size(); i++) {
-		for(int j = 0; j < cells[i].size(); j++) {
+	for(size_t i = 0; i < cells.size(); i++) {
+		for(size_t j = 0; j < cells[i].size(); j++) {
 			delete cells[i][j];
 		}
 	}
@@ -86,7 +91,7 @@ void Grid::tick(Fission& mgr, bool trace) {
 	int i = 0;
 	if(trace) {
 		usleep(1000*1000 / 4);
-		std::cerr.put('\n');
+		std::cerr << std::endl;
 	}
 	
 	// Tick all dynamic components
@@ -108,20 +113,26 @@ void Grid::tick(Fission& mgr, bool trace) {
 		atoms.pop();
 		
 		if(trace) {
-			while(Point{i % width, i / width} < cur.pos) {
+			Point tracePos{i % width, i / width};
+			while(tracePos < cur.pos) {
 				// Print the component
 				std::cerr.put(cells[i / width][i % width]->getType());
 				
 				if(++i % width == 0) {
-					std::cerr.put('\n');
+					std::cerr << std::endl;
 				}
+				
+				tracePos = Point{i % width, i / width};
 			}
 			
-			// Print the atom
-			std::cerr << "\u269b";
-			
-			if(++i % width == 0) {
-				std::cerr.put('\n');
+			// Check to make sure only one atom is printed per point
+			if(cur.pos == tracePos) {
+				// Print the atom
+				std::cerr << "\u269b";
+				
+				if(++i % width == 0) {
+					std::cerr << std::endl;
+				}
 			}
 		}
 		
@@ -135,10 +146,10 @@ void Grid::tick(Fission& mgr, bool trace) {
 			std::cerr.put(cells[i / width][i % width]->getType());
 			
 			if(++i % width == 0) {
-				std::cerr.put('\n');
+				std::cerr << std::endl;
 			}
 		}
-		std::cerr.put('\n');
+		std::cerr << std::endl;
 	}
 	
 	// Process each new collision

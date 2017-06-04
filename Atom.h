@@ -15,10 +15,10 @@
 namespace fsn {
 	class Atom {
 	public:
+		int mass;
+		int energy;
 		Point pos;
 		Direction dir;
-		int energy;
-		int mass;
 		bool printing;
 		bool setting;
 		

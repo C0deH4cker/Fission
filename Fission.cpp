@@ -17,7 +17,7 @@ using namespace fsn;
 
 
 Fission::Fission()
-: code(0), stop(false) {}
+: trace(false), stop(false), code(0) {}
 
 Fission::~Fission() {
 	delete grid;

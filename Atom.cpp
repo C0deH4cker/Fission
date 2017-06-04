@@ -13,18 +13,18 @@ using namespace fsn;
 
 
 Atom::Atom(const Point& startingPos, Direction startingDir)
-: pos(startingPos), dir(startingDir), mass(1), energy(0),
+: mass(1), energy(0), pos(startingPos), dir(startingDir),
 printing(false), setting(false) {}
 
 Atom::Atom(const Atom& other)
-: pos(other.pos), dir(other.dir), mass(other.mass), energy(other.energy),
+: mass(other.mass), energy(other.energy), pos(other.pos), dir(other.dir),
 printing(other.printing), setting(other.setting) {}
 
 Atom& Atom::operator=(const Atom& other) {
-	pos = other.pos;
-	dir = other.dir;
 	mass = other.mass;
 	energy = other.energy;
+	pos = other.pos;
+	dir = other.dir;
 	printing = other.printing;
 	setting = other.setting;
 	return *this;
@@ -51,10 +51,10 @@ Atom Atom::move(int w, int h, int steps) const {
 }
 
 bool fsn::operator==(const Atom& a, const Atom& b) {
-	return a.pos == b.pos &&
-	       a.dir == b.dir &&
-	       a.mass == b.mass &&
+	return a.mass == b.mass &&
 	       a.energy == b.energy &&
+	       a.pos == b.pos &&
+	       a.dir == b.dir &&
 	       a.printing == b.printing;
 }
 
