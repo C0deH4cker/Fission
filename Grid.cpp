@@ -17,6 +17,7 @@
 #include <set>
 #include <unordered_set>
 #include <unistd.h>
+#include <limits.h>
 #include "macros.h"
 #include "tokens.h"
 #include "Atom.h"
